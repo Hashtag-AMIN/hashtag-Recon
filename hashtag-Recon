@@ -1,0 +1,908 @@
+#!/usr/bin/env python3
+
+import argparse,sys,subprocess
+
+modules = ["subdomain", "resolver", "ptresolver", "whois", "favicon", "dnsbrute", "dnslooter", "portscan", "vhostscan", "openssl", "apkextract", "liveprobe", "screenshoter", "crawler", "techdetect", "jsenum", "robomap", "paramextract", "hiddenparam", "hiddenheader", "extractor", "fuzzer", "spliter", "tamper"]
+
+banner = r"""
+           _     _          _                            ______
+          (_)   (_)        | |     _                    (_____ \
+          ______ _____  ___| |__ _| |_ _____  ____ _____ _____) )_____  ____ ___  ____
+         | ___  (____ |/___|  _ (_   _(____ |/ _  (_____|  __  /| ___ |/ ___/ _ \|  _ \
+        | |   | / ___ |___ | | | || |_/ ___ ( (_| |     | |  \ \| ____( (__| |_| | | | |
+        |_|   |_\_____(___/|_| |_| \__\_____|\___ |     |_|   |_|_____)\____\___/|_| |_|
+                                            (_____|         
+                                                                Hashtag_AMIN
+                                                        https://github.com/hashtag-amin
+"""
+help_main = """
+        Please selecet modules correctly !
+            Example:
+                ./hashtag-Recon dnsBrute [options]
+                ./hashtag-Recon JSEnum  [options]
+                ./hashtag-Recon Extractor  [options]
+                ./hashtag-Recon [modules] [-h|--help]
+"""
+
+help_app = """
+    Use these Modules:
+          
+        External:
+            subdomain, Resolver, ptResolver, dnsBrute
+            dnsLooter, openSSL, whois, favicon, portScan
+            vhostScan, apkExtract, liveProbe, screenShoter
+
+        Internal:
+            crawler, JSEnum, techDetect, roboMap
+            paramExtract, hiddenParam, hiddenHeader
+          
+        Custom:
+            Fuzzer, Tamper, Extractor, Spliter       
+"""
+
+def run_module():
+# External
+
+#=======================
+# Recon-E-subdomain-(heavy|light|recursive).sh
+
+    if sys.argv[1].lower() == "subdomain":
+        parser_subdomain = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+        
+        Find subdomain with diffrent ways(Passive), Such as:
+                    Providers, SSL, Reverse Whois, Github, WebHistory & ...
+        
+        Example:
+
+                ./hashtag-Recon subdomain -light -domain example.com 
+                ./hashtag-Recon subdomain -heavy -domain example.com  
+                ./hashtag-Recon subdomain -recursive -subs example.com.subs.txt
+
+        Output: 
+                example.com.Subs-provider.txt
+                example.com.recursive-Subs.txt
+        """)
+        parser_subdomain.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        parser_subdomain.add_argument('-domain', type=str, default=None, help='Domain which find Subdomains')
+        parser_subdomain.add_argument('-light',action='store_true',default=False, help='Find subdomain fast, But not completely')
+        parser_subdomain.add_argument('-heavy',action='store_true',default=False, help='Find subdomain completely, But slow')
+        parser_subdomain.add_argument('-subs', type=str, default=None, help='File that include Domains/Subdomains to find Subdomains with recursive flag')
+        parser_subdomain.add_argument('-recursive',action='store_true',default=False, help='Find subdomains Recursively')
+
+
+        subdomain_args = parser_subdomain.parse_args()
+        domain = subdomain_args.domain
+        light = subdomain_args.light
+        heavy = subdomain_args.heavy
+        subs = subdomain_args.subs
+        recursive = subdomain_args.recursive
+
+        if domain and light and (subs == None):
+                subprocess.run(["bash", "./modules/External/Recon-E-subdomain-light.sh",domain], check=True)
+        elif domain and heavy and (subs == None):
+                subprocess.run(["bash", "./modules/External/Recon-E-subdomain-heavy.sh",domain], check=True)
+        elif subs and recursive and (domain == None):
+                subprocess.run(["bash", "./modules/External/Recon-E-subdomain-recursive.sh",subs], check=True)
+        else:
+            parser_subdomain.print_usage()
+
+#=======================
+# Recon-E-Resolver.sh
+            
+    elif sys.argv[1].lower() == "resolver":
+        resolve_subdomain = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+        Resolver all domain/Subdomain that find 
+
+        Example:
+                ./hashtag-Recon resolver -subs example.com.subs.txt
+
+        Output:
+                example.com.Subs.resolve.txt
+        """)
+        resolve_subdomain.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        resolve_subdomain.add_argument('-subs', type=str, default=None, help='File that include domains to resolve')
+        resolve_args = resolve_subdomain.parse_args()
+        domain_list = resolve_args.subs
+
+        if domain_list:
+            subprocess.run(["bash", "./modules/External/Recon-E-Resolver.sh",domain_list], check=True)
+        else:
+            resolve_subdomain.print_usage()
+
+#=======================
+    # Recon-E-dns-Brute.sh
+            
+    elif sys.argv[1].lower() == "dnsbrute":
+        dnsbrute_subdomain = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Use subdomain wordlist with FUZZ.domain.site pattern
+        Use dnsgen with efficient wordlist, then Resolve
+        
+        Example:
+                ./hashtag-Recon dnsBrute -domain example.com -subs example.com.subs.txt -light
+                ./hashtag-Recon dnsBrute -domain example.com -subs example.com.subs.txt -heavy
+
+        Output: 
+                example.com.dnsBrute.txt
+                example.com.dnsgen.txt
+                example.com.dnsBrute-gen.txt
+        """)
+        dnsbrute_subdomain.add_argument('Mode', type=str , default=None, help='Mode to Run Script')
+        dnsbrute_subdomain.add_argument('-domain', type=str, default=None, help='Domain for bruteforce')
+        dnsbrute_subdomain.add_argument('-subs', type=str, default=None, help='File that include domains for input of dsngen')
+        dnsbrute_subdomain.add_argument('-heavy', action='store_true',default=False, help='Use top 500k subdomain & efficient wordlist for dnsgen')
+        dnsbrute_subdomain.add_argument('-light', action='store_true',default=False, help='Use top 1M subdomain & complete wordlist for dnsgen')
+        dnsBrute_args = dnsbrute_subdomain.parse_args()
+        domain = dnsBrute_args.domain
+        domain_list = dnsBrute_args.subs
+        flag_heavy = dnsBrute_args.heavy
+        flag_light = dnsBrute_args.light
+
+        if domain_list and domain and flag_heavy:
+            subprocess.run(["bash", "./modules/External/Recon-E-dns-Brute-heavy.sh", domain, domain_list], check=True)
+        elif domain_list and domain and flag_light:
+            subprocess.run(["bash", "./modules/External/Recon-E-dns-Brute-light.sh", domain, domain_list], check=True)
+        else:
+            dnsbrute_subdomain.print_usage()
+
+#=======================
+    #Recon-E-DNS-CIDR.sh
+            
+    elif sys.argv[1].lower() == "dnslooter":
+        dnsExtract_subdomain = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Extract dns records such as: A, CNAME, MX, PTR
+        Exclude CDN IPs                
+        Find CIDR range
+
+        Example:
+                ./hashtag-Recon dnsLooter -subs example.com.subs.txt
+
+        Output: 
+                example.com.Subs.ip-A.txt
+                example.com.Subs.mx.txt
+                example.com.Subs.cname.txt
+                example.com.Subs.No-cdn.txt
+                example.com.Subs.CIDR.txt
+                example.com.Subs.ptr.txt
+                """)
+        dnsExtract_subdomain.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        dnsExtract_subdomain.add_argument('-subs', type=str, default=None, help='File that include domains/subdomains')
+        dnsExtract_args = dnsExtract_subdomain.parse_args()
+        domain_list = dnsExtract_args.subs
+
+        if domain_list:
+            subprocess.run(["bash", "./modules/External/Recon-E-DNS-CIDR.sh",domain_list], check=True)
+        else:
+            dnsExtract_subdomain.print_usage()
+
+#=======================
+    #Recon-E-openssl-cert.sh
+            
+    elif sys.argv[1].lower() == "openssl":
+        openssl_host = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Use openssl command for find more details about SSL/TLS
+
+        Example:
+                ./hashtag-Recon dnsBrute -domain example.com -port 443
+        """)
+        openssl_host.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        openssl_host.add_argument('-domain', type=str, default=None, help='Domain to scan with openssl')
+        openssl_host.add_argument('-port', type=str, default=None, help='Port that has a ssl connection')
+        openssl_args = openssl_host.parse_args()
+        domain = openssl_args.domain
+        domain_port = openssl_args.port
+
+        if domain_port and domain:
+            subprocess.run(["bash", "./modules/External/Recon-E-openssl-cert.sh", domain, domain_port], check=True)
+        else:
+            openssl_host.print_usage()
+
+#=======================
+    # Recon-E-PortScan-(ssl-cert-heavy|ssl-cert-light|http|top-1000).sh
+            
+    elif sys.argv[1].lower() == "portscan":
+        port_scan = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Use Nmap commands for portScan with:
+                SSL scan with ssl-cert Nmap script
+                HTTP scan for known service use that
+                Top 1000 ports scan
+
+        Example:
+                ./hashtag-Recon portscan -hosts example.com.CIDR.txt -domain example.com -ssl-heavy
+                ./hashtag-Recon portscan -hosts example.com.ip.txt -domain example.com -ssl-light
+                ./hashtag-Recon portscan -hosts example.com.resolve.txt -http
+                ./hashtag-Recon portscan -hosts example.com.CIDR.txt -top
+
+        Output:
+                example.com-ssl-cert.all-domains.txt
+                example.com-ssl-cert-domain.txt
+                example.com-PortScan-http.txt
+                example.com-PortScan-1000.txt
+                """)
+        port_scan.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        port_scan.add_argument('-domain', type=str, default=None, help='domain for use in regex to Extract domains InScope')
+        port_scan.add_argument('-hosts', type=str, default=None, help='CIDRs/Domains/IPs for portScan')
+        port_scan.add_argument('-ssl-light', action='store_true',default=False, help='Scan top ports use ssl')
+        port_scan.add_argument('-ssl-heavy', action='store_true',default=False, help='Scan known ports use ssl')
+        port_scan.add_argument('-http', action='store_true', default=False, help='Scan known ports use http')
+        port_scan.add_argument('-top', action='store_true', default=False, help='Scan 1000 top ports')
+        portscan_args = port_scan.parse_args()
+        domain = portscan_args.domain
+        domain_hosts = portscan_args.hosts
+        flag_ssl_heavy = portscan_args.ssl_heavy
+        flag_ssl_light = portscan_args.ssl_light
+        flag_http = portscan_args.http
+        flag_top = portscan_args.top
+
+        if domain_hosts:
+            if flag_ssl_heavy and domain:
+                subprocess.run(["bash", "./modules/External/Recon-E-PortScan-ssl-cert-heavy.sh", domain, domain_hosts], check=True)
+            elif flag_ssl_light and domain:
+                subprocess.run(["bash", "./modules/External/Recon-E-PortScan-ssl-cert-light.sh", domain, domain_hosts], check=True)
+            elif flag_http and (domain == None):
+                subprocess.run(["bash", "./modules/External/Recon-E-PortScan-http.sh", domain_hosts], check=True)
+            elif flag_top and (domain == None):
+                subprocess.run(["bash", "./modules/External/Recon-E-PortScan-top-1000.sh", domain_hosts], check=True)
+            else:
+                port_scan.print_usage()
+        else:
+            port_scan.print_usage()
+
+#=======================
+    # Recon-E-apktool.sh
+            
+    elif sys.argv[1].lower() == "apkextract":
+        apkExtract_subdomain = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Extract endpoint from Android file [.apk] when decomplie that
+
+        Example:
+                ./hashtag-Recon apkExtract -app example.apk
+
+        Output:
+                example.com.apk-Endpoint.txt
+        """)
+        apkExtract_subdomain.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        apkExtract_subdomain.add_argument('-app', type=str, default=None, help='File that has .apk extention')
+        apkExtract_args = apkExtract_subdomain.parse_args()
+        app_name = apkExtract_args.app
+
+        if app_name:
+            subprocess.run(["bash", "./modules/External/Recon-E-apk-extract.sh",app_name], check=True)
+        else:
+            apkExtract_subdomain.print_usage()
+
+#=======================
+    # Recon-E-vhost-Brute.sh
+
+    elif sys.argv[1].lower() == "vhostscan":
+        vhost_scan = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+        
+        Use ffuf for fuzz in host header for virtual host scan with patterns:
+                Custom wordlist
+                Subdomains
+                FUZZ.domain.site
+
+        Example:
+                ./hashtag-Recon vhostScan -url http://1.1.1.1
+                                          -domain example.com 
+                                          -subs example.com.subs.txt 
+        Output: 
+                example.com.vhostScan.csv
+        """)
+        vhost_scan.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        vhost_scan.add_argument('-url', type=str, default=None, help='Url to virtual host scan')
+        vhost_scan.add_argument('-domain', type=str, default=None, help='Domain for FUZZ.domain.site')
+        vhost_scan.add_argument('-subs', type=str, default=None, help='Subdomain List for FUZZ')
+
+        vhost_args = vhost_scan.parse_args()
+        url = vhost_args.url
+        sub_list = vhost_args.subs
+        domain = vhost_args.domain
+
+        if url and domain and sub_list:
+            subprocess.run(["bash", "./modules/External/Recon-E-vhost-Brute.sh", url, domain, sub_list], check=True)
+        else:
+            vhost_scan.print_usage()
+
+# E-to-I
+#=======================
+    # Recon-E-to-I-live-domains-(light|heavy).sh
+            
+    elif sys.argv[1].lower() == "liveprobe":
+        httpx_live = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Find domains that live and has http service
+
+        Example:
+                ./hashtag-Recon liveProbe -subs example.com.subs.txt -light
+                ./hashtag-Recon liveProbe -subs example.com.subs.txt -heavy
+
+        Output: 
+                example.com-httpx/
+                example.com-live-httpx.txt
+        """)
+        httpx_live.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        httpx_live.add_argument('-subs', type=str, default=None, help='File with subdomains')
+        httpx_live.add_argument('-heavy', action='store_true',default=False, help='Scan known ports use http')
+        httpx_live.add_argument('-light', action='store_true',default=False, help='Scan top ports use http')
+        httpx_args = httpx_live.parse_args()
+        subs = httpx_args.subs
+        flag_heavy = httpx_args.heavy
+        flag_light = httpx_args.light
+
+        if flag_heavy:
+            subprocess.run(["bash", "./modules/External/Recon-E-to-I-live-domains-heavy.sh",subs], check=True)
+        elif flag_light:
+            subprocess.run(["bash", "./modules/External/Recon-E-to-I-live-domains-light.sh",subs], check=True)
+        else:
+            httpx_live.print_usage()
+
+#=======================
+    # Recon-E-to-I-screen-shoter.sh
+            
+    elif sys.argv[1].lower() == "screenshoter":
+        screen_shoter = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Take screeenshot from file that contain urls
+
+        Example:
+                ./hashtag-Recon screenShoter -urls example.com.live.txt
+
+        Output:
+                example.com-shots/
+        """)
+        screen_shoter.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        screen_shoter.add_argument('-urls', type=str, default=None, help='File that contain urls')
+        shoter_args = screen_shoter.parse_args()
+        urls = shoter_args.urls
+
+        if urls:
+            subprocess.run(["bash", "./modules/External/Recon-E-to-I-screen-shoter.sh",urls], check=True)
+        else:
+            screen_shoter.print_usage()
+
+#=======================
+# Recon-E-ORG-CIDR.sh
+
+    elif sys.argv[1].lower() == "whois":
+        whois = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Use Whois command & Extract CIDR, Organization, Email ...
+        And make Output cleaner & useful
+        
+        Example:
+                ./hashtag-Recon whois -subs example.com.subs.txt
+
+        Output: 
+                example.com.Subs.whois.txt
+        """)
+        whois.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        whois.add_argument('-subs', type=str, default=None, help='include domains to Extract whois details')
+        whois_args = whois.parse_args()
+        domain_list = whois_args.subs
+
+        if domain_list:
+            subprocess.run(["bash", "./modules/External/Recon-E-ORG-CIDR.sh", domain_list], check=True)
+        else:
+            whois.print_usage()
+
+#=======================
+# Recon-E-favicon.sh
+    elif sys.argv[1].lower() == "favicon":
+        favicon = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Use httpx for get favicon hash of subdomains
+        
+        Example:
+                ./hashtag-Recon favicon -subs example.com.subs.txt
+
+        Output: 
+                example.com.favicon.txt
+        """)
+        favicon.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        favicon.add_argument('-subs', type=str, default=None, help='File include domains')
+        favicon_args = favicon.parse_args()
+        domain_list = favicon_args.subs
+
+        if domain_list:
+            subprocess.run(["bash", "./modules/External/Recon-E-favicon.sh", domain_list], check=True)
+        else:
+            favicon.print_usage()
+
+#=======================
+# Recon-E-ptr-Resolver.sh
+# check
+    elif sys.argv[1].lower() == "ptresolver":
+        ptresolver = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Use dnsx for take ptr record from IPs/CIDRs
+        
+        Example:
+                ./hashtag-Recon ptresolver -ip example.com.CIDR.txt
+                
+        Output: 
+                example.com.ptresolver.txt
+        """)
+        ptresolver.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        ptresolver.add_argument('-ip', type=str, default=None, help='File include IPs/CIDRs')
+        ptresolver_args = ptresolver.parse_args()
+        ip_list = ptresolver_args.ip
+
+        if ip_list:
+            subprocess.run(["bash", "./modules/External/Recon-E-ptResolver.sh", ip_list], check=True)
+        else:
+            ptresolver.print_usage()
+
+# Internal
+#=======================
+# Recon-I-crawl-(headless|light).sh
+            
+    elif sys.argv[1].lower() == "crawler":
+        crawler = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Crawl website & urls with headless browser[deep] or fastMode
+
+        Example:
+                ./hashtag-Recon crawler -domain example.com 
+                                        -urls example.com.live.txt -headless
+                ./hashtag-Recon crawler -domain example.com
+                                        -urls example.com.live.txt -light
+        Output:
+                example.com.live.crawl.txt
+        """)
+        crawler.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        crawler.add_argument('-domain', type=str, default=None, help='main scope for use in regex')
+        crawler.add_argument('-urls', type=str, default=None, help='file with urls for crawling')
+        crawler.add_argument('-headless', action='store_true', default=False, help='Deep crawl use headless browser')
+        crawler.add_argument('-light', action='store_true', default=False, help='Fast crawl without headless browser')
+        crawler_args = crawler.parse_args()
+        domain = crawler_args.domain
+        urls = crawler_args.urls
+        flag_headless = crawler_args.headless
+        flag_light = crawler_args.light
+
+        if flag_headless:
+            subprocess.run(["bash", "./modules/Internal/Recon-I-crawl-headless.sh", domain, urls], check=True)
+        elif flag_light:
+            subprocess.run(["bash", "./modules/Internal/Recon-I-crawl-light.sh", domain, urls], check=True)
+        else:
+            crawler.print_usage()
+
+#=======================
+# Recon-I-robots-sitemap.sh
+            
+    elif sys.argv[1].lower() == "robomap":
+        robomap = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Use archive.org for find old robots & sitemap (Passive)
+        Send request to website for find robots & sitemap (Active)
+
+        Example:
+                ./hashtag-Recon robomap -urls example.com.live.txt 
+
+        Output:
+                example.com-robomap.txt
+        """)
+        robomap.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        robomap.add_argument('-urls', type=str, default=None, help='File that contain urls')
+
+        robomap_args =robomap.parse_args()
+        urls = robomap_args.urls
+
+        if urls:
+            subprocess.run(["bash", "./modules/Internal/Recon-I-robots-sitemap.sh", urls], check=True)
+        else:
+            robomap.print_usage()
+
+#=======================
+# Recon-I-JS-enum.sh
+            
+    elif sys.argv[1].lower() == "jsenum":
+        jsEnum = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Extract, Store and make hash JS files for track
+        Extract all sensetive data from files or github repo
+        Extract all Endpoints
+
+        Example:
+                ./hashtag-Recon jsEnum -content -urls example.com.live.txt 
+                ./hashtag-Recon jsEnum -secret -url http://github.com/example.git
+                ./hashtag-Recon jsEnum -secret -dir example.com-JS-content-dir
+                ./hashtag-Recon jsEnum -endpoint -dir example.com-JS-content-dir
+        Output:
+                example.com-JS-content--[date].txt
+                example.com-JS-md5sum--[date].txt
+                example.com-JS-SecretFinder.txt
+                example.com-JS-endpoints.txt
+        """)
+        jsEnum.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        jsEnum.add_argument('-url', type=str, default=None, help='Url for github repository')
+        jsEnum.add_argument('-urls', type=str, default=None, help='File include urls for find Js files')
+        jsEnum.add_argument('-dir', type=str, default=None, help='Dir include Js-content')
+        jsEnum.add_argument('-content',action='store_true',default=False, help='Get content of JS files from input urls')
+        jsEnum.add_argument('-secret',action='store_true',default=False, help='Find Sensetive data from Js-content dir or github repo')
+        jsEnum.add_argument('-endpoint',action='store_true',default=False, help='Find endpoints from Js-content dir')
+
+        jsEnum_args =jsEnum.parse_args()
+        url = jsEnum_args.url
+        urls = jsEnum_args.urls
+        dir = jsEnum_args.dir
+        content = jsEnum_args.content
+        secret = jsEnum_args.secret
+        endpoint = jsEnum_args.endpoint
+
+        if urls and content and (dir == None) and (url == None):
+                subprocess.run(["bash", "./modules/Internal/Recon-I-JS-enum-get-content.sh",urls], check=True)
+        elif dir and secret and (urls == None) and (url == None):
+                subprocess.run(["bash", "./modules/Internal/Recon-I-JS-enum-get-secret-file.sh",dir], check=True)
+        elif url and secret and (dir == None) and (urls == None):
+                subprocess.run(["bash", "./modules/Internal/Recon-I-JS-enum-get-secret-github.sh",url], check=True)
+        elif dir and endpoint and (urls == None) and (url == None):
+                subprocess.run(["bash", "./modules/Internal/Recon-I-JS-enum-get-endpoint.sh",dir], check=True)
+        else:
+            jsEnum.print_usage()
+
+#=======================
+# Recon-I-tech-detect.sh
+            
+    elif sys.argv[1].lower() == "techdetect":
+        webdetect = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Detect technology & structure use in DomainName
+
+        Example:
+                ./hashtag-Recon techDetect -domain example.com
+
+        Output: 
+                example.com.techdetect.txt
+        """)
+        webdetect.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        webdetect.add_argument('-domain', type=str, default=None, help='Domain for technology Detection')
+
+        webdetect_args =webdetect.parse_args()
+        domain = webdetect_args.domain
+
+        if domain:
+            subprocess.run(["bash", "./modules/Internal/Recon-I-tech-detect.sh", domain], check=True)
+        else:
+            webdetect.print_usage()
+
+#=======================
+# Recon-I-extract-param-path.sh
+            
+    elif sys.argv[1].lower() == "paramextract":
+        paramextract = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Extract Parameters & make Custom wordlist for HiddenParam discovery
+        Extract Path that include Crawl urls file
+
+        Example:
+                ./hashtag-Recon paramextract -urls example.com.crawl.txt
+        Output: 
+                example.com-param-wordlist.txt
+                example.com-paths.txt
+                """)
+        paramextract.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        paramextract.add_argument('-urls', type=str, default=None, help='Urls for Extract Parameter & Path')
+
+        paramextract_args =paramextract.parse_args()
+        urls = paramextract_args.urls
+
+        if urls:
+            subprocess.run(["bash", "./modules/Internal/Recon-I-extract-param-path.sh", urls], check=True)
+        else:
+            paramextract.print_usage()
+
+#=======================
+# Recon-I-hidden-Param-(heavy|light).sh
+            
+    elif sys.argv[1].lower() == "hiddenparam":
+        hiddenParam = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Hidden Parameter Discovery with x8 & Arjun
+
+        Example:
+                ./hashtag-Recon hiddenParam -url "http://example.com[/param?key=value]"
+                                            -wordlist example.com.param-wordlist.txt
+                                            -heavy
+                                                        
+                ./hashtag-Recon hiddenParam -url "http://example.com[/param?key=value]"
+                                            -wordlist example.com.param-wordlist.txt
+                                            -light -method POST
+        Output: 
+                example.com-hparam-get.txt
+                example.com-hparam-post.txt
+                """)
+        hiddenParam.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        hiddenParam.add_argument('-url', type=str, default=None, help='Url for Hidden Parameter Discovery')
+        hiddenParam.add_argument('-wordlist', type=str, default=None, help='Custom wordlist for X8')
+        hiddenParam.add_argument('-method', type=str, default=None, help='Http Method to request <In -light Mode>')
+        hiddenParam.add_argument('-heavy', action='store_true',default=False, help='Scan GET & POST & full Discovery')
+        hiddenParam.add_argument('-light', action='store_true',default=False, help='Scan Specified Method & Custom wordlist')
+
+        hiddenParam_args =hiddenParam.parse_args()
+        url = hiddenParam_args.url
+        wordlist = hiddenParam_args.wordlist
+        method = hiddenParam_args.method
+        flag_heavy = hiddenParam_args.heavy
+        flag_light = hiddenParam_args.light
+
+        if url and method and wordlist and flag_light:
+            subprocess.run(["bash", "./modules/Internal/Recon-I-hidden-Param-light.sh", method, url, wordlist], check=True)
+        elif url and wordlist and flag_heavy and (method == None):
+            subprocess.run(["bash", "./modules/Internal/Recon-I-hidden-Param-heavy.sh", url, wordlist], check=True)
+        else:
+            hiddenParam.print_usage()
+
+#=======================
+# Recon-I-hidden-header-(heavy|light).sh
+            
+    elif sys.argv[1].lower() == "hiddenheader":
+        hiddenHeader = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Hidden Header Discovery with x8
+
+        Example:
+                ./hashtag-Recon hiddenHeader -url http://example.com -heavy
+                ./hashtag-Recon hiddenHeader -url http://example.com -light
+                                             -wordlist header-wordlist.txt
+                                             -method POST
+        Output: 
+                example.com-hheader-get.txt
+                example.com-hheader-post.txt
+        """)
+        hiddenHeader.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        hiddenHeader.add_argument('-url', type=str, default=None, help='url for Hidden Header Discovery')
+        hiddenHeader.add_argument('-wordlist', type=str, default=None, help='Custom wordlist for X8')
+        hiddenHeader.add_argument('-method', type=str, default=None, help='Http Method to request <In -light Mode>')
+        hiddenHeader.add_argument('-heavy', action='store_true',default=False, help='Scan GET & POST & full Discovery')
+        hiddenHeader.add_argument('-light', action='store_true',default=False, help='Scan Specified Method & Custom wordlist')
+
+        hiddenHeader_args =hiddenHeader.parse_args()
+        url = hiddenHeader_args.url
+        wordlist = hiddenHeader_args.wordlist
+        method = hiddenHeader_args.method
+        flag_heavy = hiddenHeader_args.heavy
+        flag_light = hiddenHeader_args.light
+
+        if url and method and wordlist and flag_light:
+            subprocess.run(["bash", "./modules/Internal/Recon-I-hidden-header-light.sh", method, url, wordlist], check=True)
+        elif url and flag_heavy and (method == None) and (wordlist == None):
+            subprocess.run(["bash", "./modules/Internal/Recon-I-hidden-header-heavy.sh", url], check=True)
+        else:
+            hiddenHeader.print_usage()
+
+# Custom
+#=======================
+# Recon-fuzz-custom.sh
+            
+    elif sys.argv[1].lower() == "fuzzer":
+        fuzzer = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Fuzz url with sensetive dir, file or custom wordlist
+        if fuzz with Custom wordlist use FUZZ keyword
+
+        Example:
+                ./hashtag-Recon fuzzer -url http://example.com -dir
+                ./hashtag-Recon fuzzer -url http://example.com -file
+                ./hashtag-Recon fuzzer -url http://example.com/FUZZ
+                                       -wordlist ./Custom-wordlist.txt
+        Output:
+                example.com-fuzz.csv
+                example.com-fuzz-dir.csv 
+                example.com-fuzz-file.csv
+        """)
+        fuzzer.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        fuzzer.add_argument('-url', type=str, default=None, help='Url to fuzzing')
+        fuzzer.add_argument('-wordlist', type=str, default=None, help='Custom wordlist for FUZZ')
+        fuzzer.add_argument('-dir', action='store_true',default=False, help='Enable for directory fuzzing')
+        fuzzer.add_argument('-file', action='store_true',default=False, help='Enable for file fuzzing')
+        fuzzer_args = fuzzer.parse_args()
+        url = fuzzer_args.url
+        wordlist = fuzzer_args.wordlist
+        dir = fuzzer_args.dir
+        file = fuzzer_args.file
+
+        if url and wordlist:
+                subprocess.run(["bash", "./modules/Custom/Recon-fuzz-custom.sh", url, wordlist], check=True)
+        elif url and dir and (wordlist == None):
+                subprocess.run(["bash", "./modules/Custom/Recon-fuzz-dir.sh", url], check=True)
+        elif url and file and (wordlist == None):
+                subprocess.run(["bash", "./modules/Custom/Recon-fuzz-file.sh", url], check=True)
+        else:
+                fuzzer.print_usage()
+
+#=======================
+    # file Extractors
+    # Recon-(E-vhost|E-httpx|I-crwal|fuzz|file-diffrence)-extractor.sh
+
+    elif sys.argv[1].lower() == "extractor":
+        extractor = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Extract & Split files such as:
+
+                IPs Extract from input file
+                File diffrence for find subdomain just earnd by dnsBrute
+                Crawler Result extract by Extention[.php, .asp, .jsp, hasParam...] 
+                LiveProbe,vhostScan(.csv) and FUZZ(.csv) extract by http-Status-code
+                
+        Example:
+                ./hashtag-Recon Extractor -liveprobe -input example.com.*
+                ./hashtag-Recon Extractor -vhost -input *.vhostScan.csv
+                ./hashtag-Recon Extractor -crawl -input example.com/*.txt
+                ./hashtag-Recon Extractor -fuzz -input example.com.fuzz.csv
+                ./hashtag-Recon Extractor -ip -input example.com.fuzz.txt
+                ./hashtag-Recon Extractor -diff -provider example.com.subs.txt
+                                                -dns example.com.live.txt
+        Output: 
+                example.com.live.20X.txt
+                example.com.vhostScan.4XX.txt
+                example.com.crawl.hasParam.txt
+                example.com.crawl.php.txt
+        """)
+        extractor.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        extractor.add_argument('-input', type=str, default=None, help='File or wildcard for Extract')
+        extractor.add_argument('-provider', type=str, default=None, help='File that include domains earnd by providers')
+        extractor.add_argument('-dns', type=str, default=None, help='File that include domains earnd by dnsBrute')
+        extractor.add_argument('-liveprobe', action='store_true', default=False, help='Extract liveProbe module result')
+        extractor.add_argument('-vhost', action='store_true', default=False, help='Extract vhostScan module result(.csv)')
+        extractor.add_argument('-crawl', action='store_true', default=False, help='Extract crawler module result')
+        extractor.add_argument('-fuzz', action='store_true', default=False, help='Extract fuzzr module result(.csv)')
+        extractor.add_argument('-ip', action='store_true', default=False, help='Extract ip from result')
+        extractor.add_argument('-diff', action='store_true', default=False, help='Extract diffrence between two file[in -dns but not in -provider file]')
+        
+        extractor_args = extractor.parse_args()
+        input = extractor_args.input
+        provider = extractor_args.provider
+        dns = extractor_args.dns
+        flag_liveprobe = extractor_args.liveprobe
+        flag_vhost = extractor_args.vhost
+        flag_crawlt = extractor_args.crawl
+        flag_diff = extractor_args.diff
+        flag_fuzz = extractor_args.fuzz
+        flag_ip = extractor_args.ip
+
+        if flag_liveprobe and input and (provider == None) and (dns == None):
+                subprocess.run(["bash", "./modules/Custom/Recon-extractor-httpx.sh", input], check=True)
+        elif flag_vhost and input and (provider == None) and (dns == None):
+                subprocess.run(["bash", "./modules/Custom/Recon-extractor-vhost.sh", input], check=True)
+        elif flag_crawlt and input and (provider == None) and (dns == None):
+                subprocess.run(["bash", "./modules/Custom/Recon-extractor-crwal.sh", input], check=True)
+        elif flag_fuzz and input and (provider == None) and (dns == None):
+                subprocess.run(["bash", "./modules/Custom/Recon-extractor-fuzz.sh", input], check=True)
+        elif flag_ip and input and (provider == None) and (dns == None):
+                subprocess.run(["bash", "./modules/Custom/Recon-extractor-ip.sh", input], check=True)
+        elif flag_diff and provider and dns:
+                subprocess.run(["bash", "./modules/Custom/Recon-extractor-diffrence.sh", provider, dns], check=True)
+        else:
+            extractor.print_usage()
+
+#=======================
+#Recon-spliter-(file|line|size).sh
+            
+    elif sys.argv[1].lower() == "spliter":
+        spliter = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Split input file with line,size or number of files
+        
+        Example:
+                ./hashtag-Recon Spliter -input example.com.subs.txt -line 30
+                ./hashtag-Recon Spliter -input example.com.crawl.txt -file 5
+                ./hashtag-Recon Spliter -input example.com.crawl.txt -size 2M          
+        Output:
+                example.com.crawlXX.txt ==> [XX:01-99]
+        """)
+        spliter.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        spliter.add_argument('-input', type=str, default=None, help='Input files to split')
+        spliter.add_argument('-line', type=str, default=None, help='Input split by X lines')
+        spliter.add_argument('-file', type=str, default=None, help='Input split to X files')
+        spliter.add_argument('-size', type=str, default=None, help='Input split to files that has X size, values like: (20M|100K|2G)')
+
+        spliter_args = spliter.parse_args()
+        input = spliter_args.input
+        line = spliter_args.line
+        file = spliter_args.file
+        size = spliter_args.size
+
+        if input and line:
+                subprocess.run(["bash", "./modules/Custom/Recon-spliter-line.sh", input, line], check=True)
+        elif input and file:
+                subprocess.run(["bash", "./modules/Custom/Recon-spliter-file.sh", input, file], check=True)
+        elif input and size:
+                subprocess.run(["bash", "./modules/Custom/Recon-spliter-size.sh", input, file], check=True)
+        else:
+            spliter.print_usage()
+
+#=======================
+# Recon-verb-tamper-(heavy-light).sh
+                
+    elif sys.argv[1].lower() == "tamper":
+        tamper = argparse.ArgumentParser(prog='hashtag-Recon',
+        usage="""
+
+        Tamper url with http method
+
+        Example:
+                ./hashtag-Recon Tamper -url http://example.com -light
+                ./hashtag-Recon Tamper -url http://example.com -heavy
+        Output:
+                example.com-tamper.txt
+        """)
+        tamper.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
+        tamper.add_argument('-url', type=str, default=None, help='Url fot verb tampering')
+        tamper.add_argument('-heavy', action='store_true',default=False, help='Verb Tampering known http method')
+        tamper.add_argument('-light', action='store_true',default=False, help='Verb Tampering top http method')
+        tamper_args = tamper.parse_args()
+        url = tamper_args.url
+        flag_heavy = tamper_args.heavy
+        flag_light = tamper_args.light
+
+        if url and flag_heavy:
+                subprocess.run(["bash", "./modules/Custom/Recon-verb-tamper-heavy.sh",url], check=True)
+        elif url and flag_light:
+                subprocess.run(["bash", "./modules/Custom/Recon-verb-tamper-light.sh",url], check=True)
+        else:
+                tamper.print_usage()
+
+#=======================
+        
+def main():
+
+    # main_help
+    if len(sys.argv) == 1 :
+        print(banner)
+        print(help_app)
+
+    #module Check
+    elif len(sys.argv) <= 2 and sys.argv[1].lower() not in modules:
+        print(banner)
+        print(help_main)
+        print(help_app)
+
+    elif len(sys.argv) == 2 and  sys.argv[1].lower() in modules:
+        print(banner)
+        run_module()
+
+    elif len(sys.argv) == 3 and  sys.argv[1].lower() in modules and sys.argv[2].lower() in ["-h", "--help"]:
+        print(banner)
+        run_module()
+    else:
+        try:
+            run_module()
+        except KeyboardInterrupt :
+            print("KeyboardInterrupt Error..!")
+            print("Stop Script Manually!!")
+        except:
+            pass
+
+#========================
+
+if __name__ == "__main__":
+    main()
