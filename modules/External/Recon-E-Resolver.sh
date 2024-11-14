@@ -25,6 +25,6 @@ file_name=` echo $1 |  sed "s/.txt//g" `
 
 echo "Run shuffledns For Resolve Domains: $1"
 
-shuffledns -l $1 -r ./wordlist/dns-resolvers.txt -silent -o $file_name.resolve.txt
+shuffledns -l $1 -r ./wordlist/dns-resolvers.txt -silent -o $file_name.resolve.txt -mode resolve
 
 echo "shuffledns Done & result in $file_name.resolve.txt ==> len: ` cat $file_name.resolve.txt | wc -l `"
