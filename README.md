@@ -80,6 +80,9 @@ cp /root/go/bin/* /usr/local/sbin/ || cp /home/${USER}/go/bin/* /usr/local/sbin/
 
 ```bash
 bash ./Tools-Install.sh
+
+# For global access
+ln -sf $(pwd)/hashtag-Recon /usr/local/sbin/hashtag-Recon
 ```
 
 ## Wordlist
