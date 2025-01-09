@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
   then
     echo "Args is not Valid"
-    echo "Usage: bash Recon-I-JS-enum-get-secrect-file.sh <Content-Dir-of-JS(example.com.JS-dir>"
+    echo "Usage: bash Recon-I-JS-enum-get-secret-file.sh <Content-Dir-of-JS(example.com.JS-dir>"
     exit
 fi
 
@@ -21,10 +21,10 @@ cat << EOF
                 
 EOF
 
-file_name=` echo $1 |  sed -e "s/.txt//" -e "s/\*//g" -e "s/\///g" `
+file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\//_/" -e "s/\*//" `
 
 echo "Start trufflehog for find sensetive value on $1 folder:"
 
-trufflehog filesystem $1 > $file_name-trufflefile.txt
+trufflehog filesystem $1 > $file_name-truffle-file.txt
 
-echo "trufflehog Done & result in $file_name-trufflefile.txt ==> len: ` cat $file_name-trufflefile.txt | wc -l `"
+echo "trufflehog Done, result & length ==> ` wc -l $file_name-truffle-file.txt`"

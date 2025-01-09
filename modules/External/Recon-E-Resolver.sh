@@ -21,10 +21,10 @@ cat << EOF
                                                   
 EOF
 
-file_name=` echo $1 |  sed "s/.txt//g" `
+file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\//_/" -e "s/\*//" `
 
-echo "Run shuffledns For Resolve Domains: $1"
+echo "Run dnsx For Resolve Domains: $1"
 
-shuffledns -l $1 -r ./wordlist/dns-resolvers.txt -silent -o $file_name.resolve.txt -mode resolve
+dnsx -l $1 -recon -silent -no-color -threads 200 | cut -d " " -f1 | sort -u > $file_name.resolve.txt
 
-echo "shuffledns Done & result in $file_name.resolve.txt ==> len: ` cat $file_name.resolve.txt | wc -l `"
+echo "dnsx Done, result & length ==>` wc -l $file_name.resolve.txt `"

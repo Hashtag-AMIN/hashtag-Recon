@@ -21,4 +21,6 @@ cat << EOF
                                                   
 EOF
 
-echo | openssl s_client -showcerts -servername $1 -connect $1:$2 2>/dev/null | openssl x509 -inform pem -noout -text
+echo "Run openssl on: $1 port: $2"
+
+echo | openssl s_client -showcerts -servername $1 -connect $1:$2 2>/dev/null | openssl x509 -inform pem -noout -text | tee $1-$2-openssl.txt

@@ -21,10 +21,10 @@ cat << EOF
                                                   
 EOF
 
-file_name=` echo $1 |  sed "s/.txt//g" `
+file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\//_/" -e "s/\*//" `
 
-echo "Start Run httpx for find live subdomains, Store Response & hash..."
+echo "Start Run httpx for find live subdomains, Store Response, hash & details..."
 
-cat $1 | httpx -ports 80,443,8000,8080,8443 -status-code -content-length -content-type -hash md5 -title -web-server -tech-detect -websocket -follow-redirects -threads 40 -rate-limit 10 -vhost -store-response -cdn -silent -filter-code 404 -random-agent -store-response-dir $file_name-httpx -output $file_name-live-httpx.txt
+httpx -list $1 -ports 80,443,8000,8080,8443 -status-code -content-length -content-type -hash md5 -title -web-server -tech-detect -websocket -follow-redirects -threads 40 -rate-limit 8 -vhost -store-response -cdn -silent -filter-code 404 -random-agent -no-color -store-response-dir $file_name-live -output $file_name-live.txt
 
-echo "httpx is finish and Result in: $file_name-httpx & $file_name-live-httpx.txt ==> len: `cat $file_name-live-httpx.txt | wc -l`"
+echo "httpx is finish and response store in: $file_name-live directory & length ==> ` wc -l $file_name-live.txt `"

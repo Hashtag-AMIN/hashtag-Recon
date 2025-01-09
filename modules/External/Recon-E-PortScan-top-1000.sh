@@ -1,7 +1,7 @@
 if [ $# -ne 1 ]
   then
     echo "Args is not Valid"
-    echo "Usage: bash Recon-E-PortScan-1000.sh <Domain|IP(example.com|10.10.10.10)>"
+    echo "Usage: bash Recon-E-PortScan-top-1000.sh <file(example.com.CIDR.txt)>"
     exit
 fi
 
@@ -19,10 +19,10 @@ cat << EOF
                                                   
 EOF
 
-file_neame=`echo $1 |  sed "s/.txt//g"`
+file_neame=` echo $1 | sed -e "s/.txt$//" -e "s/\//_/" -e "s/\*//" `
 
-echo "Start RustScan for Scan Top 1000 Ports for $1"
+echo "Start Nmap for Scan Top 1000 Ports for $1"
 
-nmap -iL $2 -T5 --min-parallelism 256 --min-hostgroup 1024 --max-retries 2 -sS --top-ports 1000 --script ssl-cert -oN $file_neame-PortScan-http.txt > /dev/null
+nmap -iL $2 -T5 --min-parallelism 64 --min-hostgroup 64 --max-retries 2 --max-scan-delay 20ms --min-rate 500 -sS -Pn --top-ports 1000 -oN $file_neame-1000-Port.txt > /dev/null
 
-echo "RustScan with Nmap Done & final result in $file_neame-PortScan-1000.txt ==> len: ` cat $file_neame-PortScan-1000.txt | wc -l `"
+echo "Nmap with Nmap Done, result & length ==> ` wc -l $file_neame-1000-Port.txt`"

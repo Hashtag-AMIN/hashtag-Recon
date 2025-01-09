@@ -15,19 +15,20 @@ cat << EOF
    | ___  (____ |/___|  _ (_   _(____ |/ _  (_____|  __  /| ___ |/ ___/ _ \|  _ \\
   | |   | / ___ |___ | | | || |_/ ___ ( (_| |     | |  \ \| ____( (__| |_| | | | |
   |_|   |_\_____(___/|_| |_| \__\_____|\___ |     |_|   |_|_____)\____\___/|_| |_|
-                                      (_____|         
+                                      (_____|
                                                           Hashtag_AMIN
                                                   https://github.com/hashtag-amin
                                                   
 EOF
 
-appname=$( echo $1 | cut -d . -f1 )
+appname=` echo $1 | cut -d . -f1 `
 
 echo "Run apktool & Extract EndPoint from apk app: $1 file"
 
 apktool d $1 --output $appname-dir
-grep -IPhro "(https?://|http?://)[\w\.-/]+[\"'\`]" $appname-dir/ | sed "s/\"//g" | sort -u | grep -v "w3\|android\|github\|schemas.android\|google\|goo.gl" > $appname-apk-Endpoint.txt
+
+grep -IPhro "(https?://|http?://)[\w\.-/]+[\"\'\`]" $appname-dir/ | sed -e "s/\"//g" -e "s/\'//g" -e "s/\`//g" | sort -u > $appname-apk.txt
 
 rm -rf $appname-dir
 
-echo "apktool Done & result in $appname-apk-Endpoint.txt ==> len: ` cat $appname-apk-Endpoint.txt | wc -l `"
+echo "apktool Done, result & length ==> ` wc -l $appname-apk.txt `"

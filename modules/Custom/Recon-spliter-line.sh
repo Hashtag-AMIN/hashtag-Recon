@@ -22,11 +22,12 @@ cat << EOF
                                                   
 EOF
 
-file_name=`echo $1 |  sed "s/.txt//g"`
+file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\//_/" -e "s/\*//" `
 
 echo "Start split Input to files by $2 lines:"
-sleep 1
+
+sleep 0.5
 
 split -e -l $2 --additional-suffix=.txt --numeric-suffixes=1 $1 $file_name
 
-echo "Result files pattern looklike ==> ${file_name}XX.txt"
+echo "Result files pattern like ==> ${file_name}XX.txt"

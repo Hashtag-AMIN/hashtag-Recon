@@ -3,7 +3,7 @@
 if [ $# -ne 2 ]
   then
     echo "Args is not Valid"
-    echo "Usage: bash file-diffrence.sh <file1(All-Subs)> <file2(dns-Brute)>"
+    echo "Usage: bash Recon-extractor-diffrence.sh <file1(All-Subs)> <file2(dns-Brute)>"
     echo "Diffrence between to file that in file2 but not in file1"
     exit
 fi
@@ -24,8 +24,8 @@ EOF
 
 echo "Start find diffrence between two file & Result:"
 
-sleep 1
+sleep 0.5
 
 result=$( grep -vxFf $1 $2 )
 
-echo $result | sed "s/ /\n/g"
+echo $result | sed "s/ /\n/g" | sort -u

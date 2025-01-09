@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
   then
     echo "Args is not Valid"
-    echo "Usage: bash Recon-I-crwal-extractor.sh <file(example.com-crwal.txt)|(*.crawl.txt)> "
+    echo "Usage: bash Recon-extractor-crwal.sh <file(example.com-crwal.txt)> "
     exit
 fi
 
@@ -23,20 +23,21 @@ EOF
 
 echo "Start extract urls with (.php|.js|.jsp|.asp|.aspx) extention & with or without parameter"
 
-file_neame=`echo $1 |  sed "s/.txt//g"`
-cat $1 | grep -rhE "(\w+\.aspx(\?|$)|\w+\.asp(\?|$))" | sort -u > $file_neame-asp.txt
-cat $1 | grep -rhE "\w+\.php(\?|$)" | sort -u > $file_neame-php.txt
-cat $1 | grep -rhE "\w+\.js(\?|$)" | sort -u > $file_neame-js.txt
-cat $1 | grep -rhE "\w+\.jsp(\?|$)" | sort -u > $file_neame-jsp.txt
-cat $1 | grep ? | sort -u > $file_neame-hashParam.txt
-cat $1 | grep -v ? | sort -u > $file_neame-noParam.txt
+file_neame=`echo $1 |  sed -e "s/.txt$//" -e "s/\//_/" -e "s/\*//" `
 
-sleep 1
+grep -hE "(\w+\.aspx(\?|$)|\w+\.asp(\?|$))" $1 | sort -u > $file_neame-asp.txt
+grep -hE "\w+\.php(\?|$)" $1 | sort -u > $file_neame-php.txt
+grep -hE "\w+\.js(\?|$)" $1 | sort -u > $file_neame-js.txt
+grep -hE "\w+\.jsp(\?|$)" $1| sort -u > $file_neame-jsp.txt
+grep ? $1 | sort -u > $file_neame-hashParam.txt
+grep -v ? $1 | sort -u > $file_neame-noParam.txt
 
-echo "Result with js extention extract in $file_neame-js.txt & len ` cat $file_neame-js.txt | wc -l `"
-echo "Result with jsp extention extract in $file_neame-jsp.txt & len ` cat $file_neame-jsp.txt | wc -l `"
-echo "Result with php extention extract in $file_neame-php.txt & len ` cat $file_neame-php.txt | wc -l `"
-echo "Result with asp|aspx extention extract in $file_neame-asp.txt & len ` cat $file_neame-asp.txt | wc -l `"
-echo "Result without parameter extract in $file_neame-noParam.txt & len ` cat $file_neame-noParam.txt | wc -l `"
-echo "Result with parameter extract in $file_neame-hashParam.txt & len ` cat $file_neame-hashParam.txt | wc -l `"
+sleep 0.5
+
+echo "Result with js extention extract & length ==> ` wc -l $file_neame-js.txt `"
+echo "Result with jsp extention extract & length ==> ` wc -l $file_neame-jsp.txt `"
+echo "Result with php extention extract & length ==> ` wc -l $file_neame-php.txt `"
+echo "Result with asp|aspx extention extract & length ==> ` wc -l $file_neame-asp.txt `"
+echo "Result without parameter extract & length ==> ` wc -l $file_neame-noParam.txt `"
+echo "Result with parameter extract & length ==> ` wc -l $file_neame-hashParam.txt `"
 echo

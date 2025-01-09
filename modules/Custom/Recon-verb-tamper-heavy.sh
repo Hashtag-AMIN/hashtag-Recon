@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
   then
     echo "Args is not Valid"
-    echo "Usage: Recon-verb-tamper.sh <Url(http://example.com)>"
+    echo "Usage: bash Recon-verb-tamper-heavy.sh <Url(http://example.com)>"
     exit
 fi
 
@@ -23,16 +23,25 @@ EOF
 
 methods=( "GET" "POST" "HEAD" "CONNECT" "PUT" "TRACE" "OPTIONS" "DELETE" "ACL" "ARBITRARY" "BASELINE-CONTROL" "BCOPY" "BDELETE" "BIND" "BMOVE" "BPROPFIND" "BPROPPATCH" "CHECKIN" "CHECKOUT" "COPY" "DEBUG" "INDEX" "LABEL" "LINK" "LOCK" "MERGE" "MKACTIVITY" "MKCALENDAR" "MKCOL" "MKREDIRECTREF" "MKWORKSPACE" "MOVE" "NOTIFY" "ORDERPATCH" "PATCH" "POLL" "PROPFIND" "PROPPATCH" "REBIND" "REPORT" "RPC_IN_DATA" "RPC_OUT_DATA" "SEARCH" "SUBSCRIBE" "TRACK" "UNBIND" "UNCHECKOUT" "UNLINK" "UNLOCK" "UNSUBSCRIBE" "UPDATE" "UPDATEREDIRECTREF" "VERSION-CONTROL" "X-MS-ENUMATTS" "jUNKVERB" )
 
+domain_name=` echo $1 | cut -d / -f3 `
 
-domain_name=$( echo $1 | cut -d / -f3 )
-
-for method in ${methods[@]}
+for method in "${methods[@]}"; 
 do
-    echo "==============================" | tee -a $domain_name-tamper.txt
-    echo -e "Send request with $method http method \nHeaders:\n" | tee -a $domain_name-tamper.txt
-    curl -skL -D - -o /dev/null -w "\nStatus code: %{response_code}\nResponse Lenght: %{size_download}\nType: %{content_type}\n\n" -X $method $1 | tee -a $domain_name-tamper.txt
+    echo "Sending request with $method HTTP method..."
+
+    response=$(curl -skL -X $method -D - -o /dev/null -w "HTTP_CODE:%{http_code}\nRESPONSE_LENGTH:%{size_download}\nCONTENT_TYPE:%{content_type}" $1)
+    http_code=$(echo "$response" | grep -o "HTTP_CODE:[0-9]*" | cut -d: -f2)
+
+    if [ "$http_code" -eq 405 ]; then
+        echo "HTTP 405 (Method Not Allowed) for $method"
+        continue
+    fi
+
+    echo "==============================" | tee -a "$domain_name-tamper.txt"
+    echo -e "Send request with $method HTTP method\nHeaders:\n" | tee -a "$domain_name-tamper.txt"
+    echo "$response" | tee -a "$domain_name-tamper.txt"
     echo
-    sleep 2 
+    sleep 1
 done
 
-echo "All result in $domain_name-tamper.txt"
+echo "All results saved in $domain_name-tamper.txt"

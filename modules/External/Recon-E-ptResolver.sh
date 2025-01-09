@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
   then
     echo "Args is not Valid"
-    echo "Usage: bash Recon-E-ptr-Resolver.sh <SubdomainList(example.com.subs.txt)>"
+    echo "Usage: bash Recon-E-ptResolver.sh <SubdomainList(example.com.subs.txt)>"
     exit
 fi
 
@@ -21,10 +21,13 @@ cat << EOF
                                                   
 EOF
 
-file_name=`echo $1 |  sed "s/.txt//g" `
+file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\//_/" -e "s/\*//" `
 
 echo "Start dnsx to resolve by PTR Record with: $1"
 
-cat $1 | dnsx -resp-only -ptr -r ./wordlist/dns-resolvers.txt -silent > $file_name.ptr.txt
+dnsx -l $1 -resp-only -ptr -silent -no-color -threads 200 -output $file_name.PTR-tmp.txt > /dev/null 2>&1
 
-echo "dnsx-PTR Done & result in $file_name.ptr.txt ==> len: ` cat $file_name.ptr.txt | wc -l ` "
+sort -u $file_name.PTR-tmp.txt > $file_name-PTR.txt
+rm $file_name.PTR-tmp.txt
+
+echo "dnsx-PTR Done, result & length ==> ` wc -l $file_name-PTR.txt` "

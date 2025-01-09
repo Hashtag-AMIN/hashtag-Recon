@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
   then
     echo "Args is not Valid"
-    echo "Usage: bash Recon-I-robots-sitemap.sh <SubdomainList(example.com.live.txt)[URLs]>"
+    echo "Usage: bash Recon-I-robots-sitemap.sh <URLs(example.com.live.txt)>"
     exit
 fi
 
@@ -21,7 +21,7 @@ cat << EOF
                                                   
 EOF
 
-file_name=` echo $1 |  sed "s/.txt//g" `
+file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\//_/" -e "s/\*//" `
 
 echo "Start robofinder & curl request for find sitemap.xml files on $1 file:"
 for site in $( cat $1 )
@@ -34,7 +34,7 @@ do
         rm $file_name-tmp-sitemap.txt
     fi
 done
-echo "robofinder & curl request Done ==> len: ` cat $file_name-sitemap.txt | wc -l `"
+echo "robofinder & curl request Done, result & length ==> ` wc -l $file_name-sitemap.txt `"
 
 echo
 sleep 3
@@ -50,9 +50,9 @@ do
         rm $file_name-tmp-robots.txt
     fi
 done
-echo "robofinder & curl request Done ==> len: ` cat $file_name-robots.txt | wc -l `"
+echo "robofinder & curl request Done, result & length ==> ` wc -l $file_name-robots.txt`"
 
-cat $file_name-sitemap.txt $file_name-robots.txt | sort -u > $file_name-roboMap.txt
+sort -u $file_name-sitemap.txt $file_name-robots.txt > $file_name-roboMap.txt
 rm $file_name-sitemap.txt $file_name-robots.txt
 
-echo "Final result in $file_name-roboMap.txt ==> len: ` cat $file_name-roboMap.txt | wc -l `"
+echo "Final result & length ==> ` wc -l $file_name-roboMap.txt`"

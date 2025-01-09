@@ -3,7 +3,7 @@
 if [ $# -ne 2 ]
   then
     echo "Args is not Valid"
-    echo "Usage: bash Recon-E-dns-Brute.sh <Domain(example.com)> <SubdomainList(example.com.resolve.txt)>"
+    echo "Usage: bash Recon-E-dns-Brute-light.sh <Domain(example.com)> <SubdomainList(example.com.resolve.txt)>"
     exit
 fi
 
@@ -21,18 +21,25 @@ cat << EOF
                                                   
 EOF
 
-echo "Run shuffledns & Brute force on: $1"
-shuffledns -d $1 -r ./wordlist/dns-resolvers.txt -w ./wordlist/dns-wordlist-light.txt -silent -o $1.dnsBrute.txt -mode bruteforce
-echo "shuffledns Done & result in $1.dnsBrute.txt ==> len: ` cat $1.dnsBrute.txt | wc -l `"
+echo "Run shuffledns & Brute force on: $1 with TOP 500k subdomain"
+shuffledns -domain $1 -resolver ./wordlist/dns-resolvers.txt -wordlist ./wordlist/dns-wordlist-light.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME -t NS -t TXT -t SRV -t SOA -t CAA" -silengtht -output $1.dnsBrute-1st.txt > /dev/null 2>&1
+echo "shuffledns Done, result & length ==> ` wc -l $1.dnsBrute-1st.txt `"
+
+echo "Run shuffledns & Brute force on: $1 with 3-with-char.txt wordlist:"
+shuffledns -domain $1 -resolver ./wordlist/dns-resolvers.txt -wordlist ./wordlist/dns-wordlist-3-with-char.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME -t NS -t TXT -t SRV -t SOA -t CAA" -silengtht -output $1.dnsBrute-2nd.txt > /dev/null 2>&1
+echo "shuffledns Done, result & length ==> ` wc -l $1.dnsBrute-2nd.txt `"
 
 echo "Run dnsgen on: $1"
-cat $2 $1.dnsBrute.txt | sort -u | dnsgen -w ./wordlist/dns-dnsgen-wordlist-light.txt - > $1.dnsgen.txt
-echo "dnsgen Done & result in $1.dnsgen.txt ==> len: ` cat $1.dnsgen.txt | wc -l `"
+sort -u $2 $1.dnsBrute-1st.txt $1.dnsBrute-2nd.txt | dnsgen --wordlist ./wordlist/dns-dnsgen-wordlist-light.txt - > $1.dnsgen.txt
+echo "dnsgen Done, result & length ==> ` wc -l $1.dnsgen.txt `"
 
 echo "Run shuffledns & Resolving on: $1.dnsgen.txt"
-shuffledns -l $1.dnsgen.txt -r ./wordlist/dns-resolvers.txt -silent -o $1.dnsBrute-gen.txt -mode bruteforce
-echo "shuffledns Done & result in $1.dnsBrute-gen.txt ==> len: ` cat $1.dnsBrute-gen.txt | wc -l `"
+shuffledns -list $1.dnsgen.txt -resolver ./wordlist/dns-resolvers.txt -mode resolve -massdns-cmd "-t AAAA -t CNAME -t NS -t TXT -t SRV -t SOA -t CAA" -output $1.dnsBrute-3rd.txt > /dev/null 2>&1
+echo "shuffledns Done, result & length ==> ` wc -l $1.dnsBrute-3rd.txt `"
+
+sort -u $1.dnsBrute-1st.txt  $1.dnsBrute-2nd.txt $1.dnsBrute-3rd.txt > $1.dnsBrute.txt
+rm $1.dnsBrute-1st.txt $1.dnsBrute-2nd.txt $1.dnsBrute-3rd.txt $1.dnsgen.txt
 
 echo
-echo "All Resolving Subdomain in $1.dnsBrute-gen.txt $1.dnsBrute.txt ==> len: ` cat $1.dnsBrute-gen.txt $1.dnsBrute.txt | wc -l `"
+echo "All Subdomain Resolve, result & length ==> ` wc -l $1.dnsBrute.txt `"
 echo

@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
   then
     echo "Args is not Valid"
-    echo "Usage: bash fuzz-Extractor.sh <file(subdomain-file.txt)|(*.txt)>"
+    echo "Usage: bash Recon-extractor-ip.sh <file|dir(subdomain-file.txt|subdomain-raw-request)"
     exit
 fi
 
@@ -21,12 +21,12 @@ cat << EOF
                                                   
 EOF
 
-file_name=` echo $1 |  sed -e "s/.txt//" -e "s/\*//g" -e "s/\///g" `
+file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\//_/" -e "s/\*//" `
 
 echo "Start Extarcting ip from $1"
 
-sleep 1
+grep -hrEo '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)' $1 | sort -u > $file_name-ip.txt
 
-grep -rhEo '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)' $1 > $file_name-ip.txt
+sleep 0.5
 
-echo "Result in $file_name-ip.txt & len ==> ` cat $file_name-ip.txt | wc -l `"
+echo "Result & length ==> ` wc -l $file_name-ip.txt `"

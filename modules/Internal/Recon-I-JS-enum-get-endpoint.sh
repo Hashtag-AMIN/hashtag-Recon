@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
   then
     echo "Args is not Valid"
-    echo "Usage: bash Recon-I-JS-enum-get-endpointsh <Content-Dir-of-JS(example.com.JS-dir/*|dir/*/*)>"
+    echo "Usage: bash Recon-I-JS-enum-get-endpoint.sh <Content-Dir-of-JS(example.com.JS-dir/|dir/)>"
     exit
 fi
 
@@ -21,10 +21,12 @@ cat << EOF
                                                   
 EOF
 
-file_name=` echo $1 |  sed -e "s/.txt//" -e "s/\*//g" -e "s/\///g" `
+file_name=` echo $1 |  sed -e "s/.txt$//" -e "s/\//_/" -e "s/\*//" `
 
-echo "Start Extract endpoints on $1 folder:"
+echo "Start Extract path from raw request/response on $1 folder:"
 
-grep -ohr "[\"\']\/[a-zA-Z0-9_/?=&]*[\"\']" $1 | sed -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//" | sort -u | tee $file_name-endpoints.txt
+grep -ohr "[\"\'\`]\/[a-zA-Z0-9_?&=\/\-\#\.]*[\"\'\`]" $1 | sed -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//" -e "s/^\`//" -e "s/\`$//" | sort -u | grep -Eiv '\.(css|jpg|jpeg|png|svg|img|gif|mp4|flv|pdf|doc|ogv|webm|wmv|webp|mov|mp3|m4a|m4p|ppt|pptx|scss|tif|tiff|ttf|otf|woff|woff2|bmp|ico|eot|htc|swf|rtf|image|rf|json|fnt|ogg|exe|txt|ml|ip)$' > $file_name-JS-Path.txt
 
-echo "Extract endpoints Done & result in $file_name-endpoints.txt ==> len: ` cat $file_name-endpoints.txt | wc -l `"
+sleep 1
+
+echo "Extract endpoints Done, result & length ==> ` wc -l $file_name-JS-Path.txt`"

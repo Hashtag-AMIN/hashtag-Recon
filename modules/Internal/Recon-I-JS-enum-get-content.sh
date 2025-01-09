@@ -21,25 +21,32 @@ cat << EOF
                                                   
 EOF
 
-file_name=` echo $1 |  sed -e "s/.txt//" -e "s/\*//g" -e "s/\///g" `
+file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\//_/" -e "s/\*//" `
 
 echo "Start getJS for crawl JSfile on $1 file:"
-getJS --input $1 --complete --insecure --resolve --output $file_name-getJS.txt
-echo "getJS Done & result in $file_name-getJS.txt ==> len: ` cat $file_name-getJS.txt | wc -l `"
+getJS -input $1 -complete -resolve -output $file_name-JS.txt
+echo "getJS Done, result & length ==> ` wc -l $file_name-JS.txt `"
+
+if [ ! -s "$file_name-JS.txt" ]; 
+then
+    echo "Can't find JS files, try more..."
+    rm $file_name-JS.txt
+    exit
+fi
 
 echo
 now_date=`date "+%Y-%m-%d"`
 
 echo "Start Download JSfile on $1 file:"
-wget -i $file_name-getJS.txt --directory-prefix $file_name-JS-content--$now_date/ --quiet
-echo "Download JSfile Done & result in $file_name-JS-content--$now_date Directory ==> len: ` ls $file_name-JS-content--$now_date | wc -l `"
+wget -i $file_name-JS.txt --directory-prefix $file_name-JS--$now_date/ --quiet
+echo "Download JSfile Done & result in $file_name-JS--$now_date Directory & length ==> ` ls $file_name-JS--$now_date | wc -l `"
 
 echo
-echo "Start make md5sum JSfiles on $file_name-JS-content--$now_date Directory:"
-for file in $( ls $file_name-JS-content--$now_date )
+echo "Start make md5sum JSfiles on $file_name-JS--$now_date Directory:"
+for file in $( ls $file_name-JS--$now_date )
 do
-  cat $file_name-JS-content--$now_date/$file | md5sum | xargs -I % echo % : $file  hash-value >>  $file_name-JS-md5sum--$now_date.txt
+  cat $file_name-JS--$now_date/$file | md5sum | xargs -I % echo % : $file  hash-value >>  $file_name-JS-hash--$now_date.txt
 done
-echo "Make md5sum JSfiles Done & result in  $file_name-JS-md5sum--$now_date.txt Directory ==> len: ` cat  $file_name-JS-md5sum--$now_date.txt | wc -l `"
+echo "Make md5sum JSfiles Done, result & length ==> ` wc -l $file_name-JS-hash--$now_date.txt `"
 
 echo "JS Enum is finish"

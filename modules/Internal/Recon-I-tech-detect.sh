@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
   then
     echo "Args is not Valid"
-    echo "Usage: bash Recon-I-tech-detect.sh <Domain(example.com)[Without-Schema]> "
+    echo "Usage: bash Recon-I-tech-detect.sh <Url(http://example.com)> "
     exit
 fi
 
@@ -21,28 +21,26 @@ cat << EOF
                                                   
 EOF
 
-echo "wappy" >> $1.tech-wappy.txt 
-echo "Start wappy for tech-detection site on $1 :"
-wappy --url $1 --writefile $1.tech-wappy.txt >> /dev/null
-echo "wappy Done & result in $1.tech-wappy.txt ==> len: ` cat $1.tech-wappy.txt | wc -l `"
+domain_name=` echo $1 | cut -d / -f3 `
 
 echo
+echo "whatweb" > $domain_name.tech-whatweb.txt
 echo "Start whatweb for tech-detection site on $1 :"
-whatweb  --user-agent "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/37.0.2062.94 Chrome/37.0.2062.94 Safari/537.36" --no-errors http://$1 | sed "s/,/\n/g" >> $1.tech-whatweb.txt
-whatweb  --user-agent "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36" https://$1 | sed "s/,/\n/g" >> $1.tech-whatweb.txt
-echo "whatweb Done & result in $1.tech-whatweb.txt ==> len: ` cat $1.tech-whatweb.txt | wc -l `"
+whatweb --user-agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:40.0) Gecko/20100101 Firefox/40.0" --no-errors $1 | sed "s/,/\n/g" >> $domain_name.tech-whatweb.txt
+echo "whatweb Done, result & length ==> ` wc -l $domain_name.tech-whatweb.txt `"
 
 echo
+echo "wad" > $domain_name.tech-wad.txt
 echo "Start wad for tech-detection site on $1 :"
-wad -u http://$1 --format txt > $1.tech-wad.txt
-wad -u https://$1 --format txt >> $1.tech-wad.txt
-echo "wad Done & result in $1.tech-wad.txt ==> len: ` cat $1.tech-wad.txt | wc -l `"
+wad -u $1 --format txt >> $domain_name.tech-wad.txt
+echo "wad Done, result & length ==> ` wc -l $domain_name.tech-wad.txt `"
 
 echo "Start wafw00f for waf-detection site on $1 :"
-wafw00f --findall --output $1.tech-wafw00f.txt $1
-echo "wafw00f Done & result in $1.tech-wafw00f.txt ==> len: ` cat $1.tech-wafw00f.txt | wc -l `"
+echo "wafw00f" > $domain_name.tech-wafw00f.txt
+wafw00f --findall --output $domain_name.tech-wafw00f.txt $1
+echo "wafw00f Done & result, result & length ==> ` wc -l $domain_name.tech-wafw00f.txt `"
 
-cat $1.tech-wappy.txt $1.tech-whatweb.txt $1.tech-wad.txt $1.tech-wafw00f.txt > $1.techdetect.txt
-rm $1.tech-wappy.txt $1.tech-whatweb.txt $1.tech-wad.txt $1.tech-wafw00f.txt
+cat $domain_name.tech-wappy.txt $domain_name.tech-whatweb.txt $domain_name.tech-wad.txt $domain_name.tech-wafw00f.txt > $domain_name.techdetect.txt
+rm $domain_name.tech-wappy.txt $domain_name.tech-whatweb.txt $domain_name.tech-wad.txt $domain_name.tech-wafw00f.txt
 
-echo "Final result in $1.techdetect.txt ==> len: ` cat $1.techdetect.txt | wc -l `"
+echo "Final result, result & length ==> ` wc -l $domain_name.techdetect.txt `"

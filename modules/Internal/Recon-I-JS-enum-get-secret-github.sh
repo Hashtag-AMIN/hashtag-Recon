@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
   then
     echo "Args is not Valid"
-    echo "Usage: bash Recon-I-JS-enum-get-secrect-github.sh <github-repo(https://github.com/github>"
+    echo "Usage: bash Recon-I-JS-enum-get-secret-github.sh <github-repo(https://github.com/github>"
     exit
 fi
 
@@ -21,10 +21,10 @@ cat << EOF
                            
 EOF
 
-file_name=` echo $1 |  sed -e "s/.txt//" -e "s/\*//g" -e "s/\///g" `
+file_name=` echo $1 | cut -d / -f4 `
 
 echo "Start trufflehog for find sensetive value on $1 github repo:"
 
-trufflehog github --repo=$1 > $file_name-trufflegit.txt
+trufflehog github --repo=$1 > $file_name-truffle-git.txt
 
-echo "trufflehog Done & result in $file_name-trufflegit.txt ==> len: ` cat $file_name-trufflegit.txt | wc -l `"
+echo "trufflehog Done, result & length ==> ` wc -l $file_name-truffle-git.txt `"

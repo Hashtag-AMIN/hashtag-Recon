@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
   then
     echo "Args is not Valid"
-    echo "Usage: bash Recon-E-Subdomain-heavy.sh <DomainFile(example.com.subs.txt)>"
+    echo "Usage: bash Recon-E-subdomain-recursive.sh <DomainFile(example.com.subs.txt)>"
     exit
 fi
 
@@ -21,16 +21,18 @@ cat << EOF
                                                   
 EOF
 
-file_name=` echo $1 |  sed "s/.txt//g" `
+file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\//_/" -e "s/\*//" `
 echo "Run Subfinder & assetfinder & jldc.me with $1 subdomain file..."
 
 for sub in $( cat $1 )
 do
-    subfinder -d $sub -all -silent >> passive_recursive.txt
+    subfinder -d $sub -all -silent -no-color >> passive_recursive.txt
     assetfinder --subs-only $sub  >> passive_recursive.txt
     curl -s "https://jldc.me/anubis/subdomains/$sub" | jq -r ".[]" | sort -u >> passive_recursive.txt
 done
 
-cat passive_recursive.txt | sort -u > $file_name.recursive-Subs.txt
-echo "All recursive Subdomains in $file_name.recursive-Subs.txt ==> len: ` cat $file_name.recursive-Subs.txt | wc -l `"
+sort -u passive_recursive.txt > $file_name-recursive.txt
+rm passive_recursive.txt
+
+echo "All recursive Subdomains result & length ==> ` wc -l $file_name-recursive.txt`"
 echo

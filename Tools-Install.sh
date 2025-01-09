@@ -18,36 +18,31 @@ mkdir tools-src
 cd tools-src
 
 echo "First we need isntall common tools"
-echo "such as Nmap & jq & dos2unix & ..."
+echo "such as Nmap, jq, curl, wget, git, whois & apktool ..."
     apt update -y
-    apt install nmap jq dos2unix curl wget git whois apktool -y
+    apt install nmap jq curl wget git whois apktool -y
 
 #===============
 echo "second install External Recon Tools"
-echo "Such as : subfinder, waybackurls, github-subdomains"
+echo "Such as : subfinder, waybackurls, amass, github-subdomains"
 
     go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-    go install github.com/tomnomnom/waybackurls@latest&\
+    go install github.com/tomnomnom/waybackurls@latest
+    go install -v github.com/owasp-amass/amass/v4/...@master
     go install github.com/gwen001/github-subdomains@latest
 
-echo "ffuf, shuffledns, dnsx, cut-cdn"&\
+echo "ffuf, dnsx, cut-cdn, shuffledns"
     go install github.com/ffuf/ffuf/v2@latest
-    go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest&\
 	go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
-    go install github.com/ImAyrix/cut-cdn@latest&\
+    go install github.com/ImAyrix/cut-cdn@latest
+    go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
 
-echo "dnsgen, Sublist3r, massdns, assetfinder, rustscan"
-    python3 -m pip install dnsgen
+echo "dnsgen, Sublist3r, assetfinder, massdns"
+    python3 -m pip install dnsgen --break-system-packages
 
     git clone https://github.com/aboul3la/Sublist3r.git
     cd Sublist3r
     python3 setup.py install
-    cd ..
-
-    git clone https://github.com/blechschmidt/massdns.git
-    cd massdns
-    make
-    cp ./bin/massdns /usr/local/sbin
     cd ..
 
     mkdir assetfinder
@@ -57,50 +52,46 @@ echo "dnsgen, Sublist3r, massdns, assetfinder, rustscan"
     cp assetfinder /usr/local/sbin
     cd ..
 
+    git clone https://github.com/blechschmidt/massdns.git
+    cd massdns
+    make
+    cp ./bin/massdns /usr/local/sbin
+    cd ..
+
 #===================
 echo "third install Internal Recon Tools:"
 
-echo "httpx, getJS, katana, gospider, unfurl, nuclei, gauplus"
+echo "httpx, getJS, katana, unfurl, gau, go-dork, fallparams"
 
-    go install github.com/bp0lr/gauplus@latest&\
     go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
-    go install github.com/003random/getJS@latest&\
+    go install github.com/003random/getJS@latest
     go install github.com/projectdiscovery/katana/cmd/katana@latest
-    go install github.com/jaeles-project/gospider@latest
-    go install github.com/tomnomnom/unfurl@latest&\
+    go install github.com/tomnomnom/unfurl@latest
+    go install github.com/lc/gau/v2/cmd/gau@latest
+    go install github.com/dwisiswant0/go-dork@latest
+    go install github.com/ImAyrix/fallparams@latest
 
-echo "Install whatweb wafw00f"
+
+echo "wafw00f, RoboFinder, trufflehog, wad, wappy, x8"
+
     apt install whatweb wafw00f -y
-
-echo "RoboFinder, trufflehog, wad, wappy, fetchParam"
 
     git clone https://github.com/SadraZg/RoboFinder
     cd RoboFinder
-    python3 -m pip install -r requirements.txt
+    python3 -m pip install -r requirements.txt --break-system-packages
     sed -i '1s/^/\#\!\/usr\/bin\/env\ python3\n/' robofinder.py
     chmod +x robofinder.py
     cp ./robofinder.py /usr/local/sbin
     cd ..
 
-    curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/sbin&\
+    curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/sbin
 
-    python3 -m pip install wad
+    python3 -m pip install wad --break-system-packages
 
-    git clone https://github.com/gokulapap/wappalyzer-cli&\
+    git clone https://github.com/gokulapap/wappalyzer-cli
     cd wappalyzer-cli
-    python3 -m pip install .
+    python3 -m pip install . --break-system-packages
     cd ..
-
-    git clone https://github.com/Hashtag-AMIN/fetchParam
-    cd fetchParam
-    python3 -m pip install -r requirement.txt
-    chmod +x fetchParam.py
-    dos2unix fetchParam.py
-    cp fetchParam.py /usr/local/sbin
-    cd ..
-
-echo "Install arjun & x8"
-    python3 -m pip install arjun&\
 
     mkdir x8
     cd x8 

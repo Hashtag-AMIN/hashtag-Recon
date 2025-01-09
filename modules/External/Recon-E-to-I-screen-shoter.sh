@@ -21,10 +21,10 @@ cat << EOF
                                                   
 EOF
 
-file_name=` echo $1 |  sed "s/.txt//g" `
+file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\//_/" -e "s/\*//" `
 
 echo "Start Run httpx for take screenShots from urls in file $1"
 
-cat $1 | httpx -screenshot -follow-redirects -threads 40 -rate-limit 5 -silent -filter-code 404 -random-agent -store-response-dir $file_name-shots -output $file_name-shots.txt
+httpx -list $1 -status-code -screenshot -follow-redirects -threads 40 -rate-limit 5 -silent -filter-code 404 -random-agent -no-color -store-response-dir $file_name-shot -output $file_name-shot.txt
 
-echo "httpx Done & result in $file_name-shots dir"
+echo "httpx Done & shots store in $file_name-shot directory & length ==> ` wc -l $file_name-shot.txt `"
