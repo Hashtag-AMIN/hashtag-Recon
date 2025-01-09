@@ -193,7 +193,7 @@ Full document of Usage of this tools available
     * Take screeenshot from urls 
         * at first time httpx install headless browser :)
 
-#### For Help and Usage of External Modules, Checkout Wiki
+#### [For Help and Usage of External Modules, Checkout Wiki](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/External-Recon)
 
 <hr>
 
@@ -237,7 +237,7 @@ Full document of Usage of this tools available
         * light: Scan Specified Method & Custom wordlist of Headers
         * heavy: Scan GET & POST with all Headers wordlist
 
-#### For Help and Usage of Internal Modules, Checkout Wiki
+#### [For Help and Usage of Internal Modules, Checkout Wiki](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/Intrenal-Recon)
 
 <hr>
 
@@ -271,7 +271,16 @@ Full document of Usage of this tools available
         * file: Input split to X files
         * size: Input split to files have X size(20M|100K|2G)
 
-#### For Help and Usage of Others Modules, Checkout Wiki
+#### [For Help and Usage of Others Modules, Checkout Wiki](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/Others)
+
+
+## Contributing
+
+Contributions are always welcome! I believe that great tools are built by great communities. Whether you’re fixing a bug, suggesting a feature, or simply sharing an idea, your contributions are invaluable. Together, we can make this project even better!
+
+Dive in, share your expertise, and let’s create something amazing. Every pull request, issue, or suggestion helps shape the future of this tool. Let’s collaborate and innovate! 🌟
+
+If you'd like to contribute to this project, [checkout wiki in structure page](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/structure)
 
 <hr>
 
