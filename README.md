@@ -78,6 +78,8 @@ able to do all steps in this flow with hashtag-Recon
 
 ![workflow](./IMG/Hashtag-Recon-wrokflow.png)
 
+[More details and autopsy workflow, Checkout Wiki](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/Workflow)
+
 Also Xmind file in IMG/ folder with Hashtag-Recon.xmind name
 
 <hr>
