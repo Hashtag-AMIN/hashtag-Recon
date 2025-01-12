@@ -22,11 +22,11 @@ cat << EOF
 EOF
 
 echo "Run shuffledns & Brute force on: $1 with TOP 1M subdomain"
-shuffledns -domain $1 -resolver ./wordlist/dns-resolvers.txt -wordlist ./wordlist/dns-wordlist-heavy.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME -t NS -t TXT -t SRV -t SOA -t CAA" -silengtht -output $1.dnsBrute-1st.txt > /dev/null 2>&1
+shuffledns -domain $1 -resolver ./wordlist/dns-resolvers.txt -wordlist ./wordlist/dns-wordlist-heavy.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME -t NS -t TXT -t SRV -t SOA -t CAA" -silent -output $1.dnsBrute-1st.txt > /dev/null 2>&1
 echo "shuffledns Done, result & length ==> ` wc -l $1.dnsBrute-1st.txt `"
 
 echo "Run shuffledns & Brute force on: $1 with 4-with-char.txt wordlist:"
-shuffledns -domain $1 -resolver ./wordlist/dns-resolvers.txt -wordlist ./wordlist/dns-wordlist-4-with-char.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME -t NS -t TXT -t SRV -t SOA -t CAA" -silengtht -output $1.dnsBrute-2nd.txt > /dev/null 2>&1
+shuffledns -domain $1 -resolver ./wordlist/dns-resolvers.txt -wordlist ./wordlist/dns-wordlist-4-with-char.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME -t NS -t TXT -t SRV -t SOA -t CAA" -silent -output $1.dnsBrute-2nd.txt > /dev/null 2>&1
 echo "shuffledns Done, result & length ==> ` wc -l $1.dnsBrute-2nd.txt `"
 
 echo "Run dnsgen on: $1"
