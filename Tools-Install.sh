@@ -72,7 +72,7 @@ echo "httpx, getJS, katana, unfurl, gau, go-dork, fallparams"
     go install github.com/ImAyrix/fallparams@latest
 
 
-echo "wafw00f, RoboFinder, trufflehog, wad, wappy, x8"
+echo "wafw00f, RoboFinder, trufflehog, wad, x8"
 
     apt install whatweb wafw00f -y
 

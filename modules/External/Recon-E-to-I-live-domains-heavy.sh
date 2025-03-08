@@ -25,6 +25,6 @@ file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\//_/" -e "s/\*//" `
 
 echo "Start Run httpx for find live subdomains, Store Response & hash...  "
 
-httpx -list $1 -ports 80,443,800,808,8000-8010,8080-8090,8180,8443 -status-code -content-length -content-type -hash md5 -title -web-server -tech-detect -websocket -follow-redirects -threads 40 -rate-limit 10 -vhost -store-response -cdn -no-color -silent -filter-code 404 -random-agent -store-response-dir $file_name-live -output $file_name-live.txt
+httpx -list $1 -ports 80,443,800,808,2052,2053,2082,2083,2086,2087,2095,2096,8000-8010,8080-8090,8180,8443,8880,10443 -status-code -content-length -content-type -hash md5 -title -web-server -tech-detect -websocket -follow-redirects -threads 40 -rate-limit 10 -vhost -store-response -cdn -no-color -silent -filter-code 404 -random-agent -store-response-dir $file_name-live -output $file_name-live.txt
 
 echo "httpx is finish and response store in: $file_name-live directory & length ==> ` wc -l $file_name-live.txt `"

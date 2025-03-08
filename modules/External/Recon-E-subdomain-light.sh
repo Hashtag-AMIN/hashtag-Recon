@@ -28,6 +28,9 @@ echo "Subfinder Done, result & length ==> ` wc -l $1-subfinder.txt `"
 echo
 echo "Run sublist3r ..."
 sublist3r -d $1 -t 10 -o $1-subli3ter.txt > /dev/null 2>&1
+if ! [ -f ./$1-subli3ter.txt ]; then
+  touch $1-subli3ter.txt
+fi
 echo "sublist3r Done, result & length ==> ` wc -l $1-subli3ter.txt `"
 
 echo

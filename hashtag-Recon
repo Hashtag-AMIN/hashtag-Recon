@@ -17,7 +17,7 @@ banner = r"""
 """
 
 help_main = """
-        Please selecet modules correctly !
+        Please selecet modules correctly!
             Example:
                 ./hashtag-Recon dnsBrute [options]
                 ./hashtag-Recon JSEnum  [options]
@@ -191,8 +191,8 @@ def run_module():
         Use openssl command for find more details about SSL/TLS
 
         Example:
-                ./hashtag-Recon dnsBrute -domain example.com [default -port 443]
-                ./hashtag-Recon dnsBrute -domain example.com -port 8443
+                ./hashtag-Recon OpenSSL -domain example.com [default -port 443]
+                ./hashtag-Recon OpenSSL -domain example.com -port 8443
                 
         Output: 
                 example.com-8443-openssl.txt
@@ -300,9 +300,7 @@ def run_module():
                 FUZZ.domain.site
 
         Example:
-                ./hashtag-Recon vhostScan -url http://1.1.1.1
-                                          -domain example.com 
-                                          -subs example.com.subs.txt 
+                ./hashtag-Recon vhostScan -url http://1.2.3.4 -domain example.com -subs example.com.subs.txt 
         Output: 
                 example.com.vhost.csv
         """)
@@ -519,12 +517,9 @@ def run_module():
         Crawl website & urls with headless browser[deep], active or passive
 
         Example:
-                ./hashtag-Recon crawler -domain example.com 
-                                        -urls example.com.live.txt -headless
-                ./hashtag-Recon crawler -domain example.com
-                                        -urls example.com.live.txt -active
-                ./hashtag-Recon crawler -domain example.com
-                                        -urls example.com.live.txt -passive
+                ./hashtag-Recon crawler -domain example.com -urls example.com.live.txt -headless
+                ./hashtag-Recon crawler -domain example.com -urls example.com.live.txt -active
+                ./hashtag-Recon crawler -domain example.com -urls example.com.live.txt -passive
 
         Output:
                 example.com.live.crawl.txt
@@ -592,10 +587,10 @@ def run_module():
         Extract all Endpoints
 
         Example:
-                ./hashtag-Recon jsEnum -content -urls example.com.live.txt 
-                ./hashtag-Recon jsEnum -secret -url http://github.com/example.git
-                ./hashtag-Recon jsEnum -secret -dir example.com-JS-content-dir
-                ./hashtag-Recon jsEnum -endpoint -dir example.com-JS-content-dir
+                ./hashtag-Recon jsEnum -urls example.com.live.txt -content
+                ./hashtag-Recon jsEnum -url http://github.com/example.git -secret
+                ./hashtag-Recon jsEnum -dir example.com-JS-content-dir -secret
+                ./hashtag-Recon jsEnum -dir example.com-JS-content-dir -endpoint
         Output:
                 example.com-JS--[date]/
                 example.com-JS--[date].txt
@@ -641,19 +636,19 @@ def run_module():
         Detect technology & structure use in DomainName
 
         Example:
-                ./hashtag-Recon techDetect -domain example.com
+                ./hashtag-Recon techDetect -url http://example.com
 
         Output: 
                 example.com.techdetect.txt
         """)
         webdetect.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
-        webdetect.add_argument('-domain', type=str, default=None, help='Domain for technology Detection')
+        webdetect.add_argument('-url', type=str, default=None, help='URL for technology Detection')
 
         webdetect_args =webdetect.parse_args()
-        domain = webdetect_args.domain
+        url = webdetect_args.url
 
-        if domain:
-            subprocess.run(["bash", "./modules/Internal/Recon-I-tech-detect.sh", domain], check=True)
+        if url:
+            subprocess.run(["bash", "./modules/Internal/Recon-I-tech-detect.sh", url], check=True)
         else:
             webdetect.print_usage()
 
@@ -693,16 +688,11 @@ def run_module():
         Hidden Parameter Discovery with x8
 
         Example:
-                ./hashtag-Recon hiddenParam -url "http://example.com[/param?key=value]"
-                                            -wordlist example.com.param-wordlist.txt
-                                            -heavy
-                                                        
-                ./hashtag-Recon hiddenParam -url "http://example.com[/param?key=value]"
-                                            -wordlist example.com.param-wordlist.txt
-                                            -light -method POST
+                ./hashtag-Recon hiddenParam -url "http://example.com/param?key=value" -wordlist wordlist.txt -heavy
+                ./hashtag-Recon hiddenParam -url "http://example.com" -wordlist wordlist.txt -light -method PUT
         Output: 
                 example.com-param-get.txt
-                example.com-param-post.txt
+                example.com-param-PUT.txt
                 """)
         hiddenParam.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
         hiddenParam.add_argument('-url', type=str, default=None, help='Url for Hidden Parameter Discovery')
@@ -736,12 +726,10 @@ def run_module():
 
         Example:
                 ./hashtag-Recon hiddenHeader -url http://example.com -heavy
-                ./hashtag-Recon hiddenHeader -url http://example.com -light
-                                             -wordlist header-wordlist.txt
-                                             -method POST
+                ./hashtag-Recon hiddenHeader -url http://example.com -light -wordlist wordlist.txt -method PATCH
         Output: 
                 example.com-header-get.txt
-                example.com-header-post.txt
+                example.com-header-PATCH.txt
         """)
         hiddenHeader.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
         hiddenHeader.add_argument('-url', type=str, default=None, help='url for Hidden Header Discovery')
@@ -808,8 +796,7 @@ def run_module():
         Example:
                 ./hashtag-Recon fuzzer -url http://example.com -dir
                 ./hashtag-Recon fuzzer -url http://example.com -file
-                ./hashtag-Recon fuzzer -url http://example.com/FUZZ
-                                       -wordlist ./Custom-wordlist.txt
+                ./hashtag-Recon fuzzer -url http://example.com/FUZZ -wordlist ./Custom-wordlist.txt
         Output:
                 example.com-fuzz.csv
                 example.com-fuzz-dir.csv
@@ -851,13 +838,12 @@ def run_module():
                 LiveProbe,vhostScan(.csv) and FUZZ(.csv) extract by http-Status-code
                 
         Example:
-                ./hashtag-Recon Extractor -liveprobe -input example.com.live.txt
-                ./hashtag-Recon Extractor -vhost -input example.com.vhostScan.csv
-                ./hashtag-Recon Extractor -crawl -input example.com.crawl.txt
-                ./hashtag-Recon Extractor -fuzz -input example.com.fuzz.csv
-                ./hashtag-Recon Extractor -ip -input example.com.dir/
-                ./hashtag-Recon Extractor -diff -provider example.com.provider.txt
-                                                -dns example.com.dnsbrute.txt
+                ./hashtag-Recon Extractor -input example.com.live.txt -liveprobe
+                ./hashtag-Recon Extractor -input example.com.vhostScan.csv -vhost
+                ./hashtag-Recon Extractor -input example.com.crawl.txt -crawl
+                ./hashtag-Recon Extractor -input example.com.fuzz.csv -fuzz
+                ./hashtag-Recon Extractor -input example.com.dir/ -ip
+                ./hashtag-Recon Extractor -diff -provider example.com.provider.txt -dns example.com.dnsbrute.txt
         Output: 
                 example.com.live.20X.txt
                 example.com.vhostScan.4XX.txt
@@ -978,7 +964,7 @@ def main():
         print(banner)
         print(help_app)
 
-    #module Check
+    # module Check
     elif len(sys.argv) <= 2 and sys.argv[1].lower() not in modules:
         print(banner)
         print(help_main)
@@ -995,8 +981,8 @@ def main():
         try:
             run_module()
         except KeyboardInterrupt :
-            print("KeyboardInterrupt Error..!")
-            print("Stop Script Manually!!")
+            print("KeyboardInterrupt Error, Stop Script Manually...")
+            print()
         except:
             pass
 

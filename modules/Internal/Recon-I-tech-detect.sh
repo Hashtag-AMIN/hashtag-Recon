@@ -40,7 +40,7 @@ echo "wafw00f" > $domain_name.tech-wafw00f.txt
 wafw00f --findall --output $domain_name.tech-wafw00f.txt $1
 echo "wafw00f Done & result, result & length ==> ` wc -l $domain_name.tech-wafw00f.txt `"
 
-cat $domain_name.tech-wappy.txt $domain_name.tech-whatweb.txt $domain_name.tech-wad.txt $domain_name.tech-wafw00f.txt > $domain_name.techdetect.txt
-rm $domain_name.tech-wappy.txt $domain_name.tech-whatweb.txt $domain_name.tech-wad.txt $domain_name.tech-wafw00f.txt
+cat $domain_name.tech-whatweb.txt $domain_name.tech-wad.txt $domain_name.tech-wafw00f.txt > $domain_name.techdetect.txt
+rm $domain_name.tech-whatweb.txt $domain_name.tech-wad.txt $domain_name.tech-wafw00f.txt
 
 echo "Final result, result & length ==> ` wc -l $domain_name.techdetect.txt `"

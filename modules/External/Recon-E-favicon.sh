@@ -28,4 +28,4 @@ echo "Start Run httpx for take favicon from urls in file $1"
 
 httpx -l $1 -status-code -favicon -follow-redirects -threads 10 -rate-limit 5 -silent -filter-code 404 -random-agent -no-color -output $file_name-favicon.txt
 
-echo "httpx Done, result & length ==> ` wc -l $file_name-favicon.txt `""
+echo "httpx Done, result & length ==> ` wc -l $file_name-favicon.txt `"
