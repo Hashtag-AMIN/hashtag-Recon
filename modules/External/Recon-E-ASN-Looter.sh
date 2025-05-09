@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
   then
     echo "Args is not Valid"
-    echo "Usage: bash Recon-E-Resolver.sh <SubdomainList(example.com.subs.txt)>"
+    echo "Usage: bash Recon-E-ASN-Looter.sh <ASN(AS1234|1234)>"
     exit
 fi
 
@@ -21,10 +21,9 @@ cat << EOF
                                                   
 EOF
 
-file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\*//" `
 
-echo "Run dnsx For Resolve Domains: $1"
+echo "Send request to bgpview.io & find ASN details of $1"
 
-dnsx -l $1 -recon -silent -no-color -threads 200 | cut -d " " -f1 | sort -u > $file_name.resolve.txt
+curl -s https://api.bgpview.io/asn/$1 | jq -r ".data | {ASN: .asn, Name: .name, DES: .description_full, WEBSITE: .website, COUNTRY: .country_code, EMAIL: .email_contacts, ADDRESS: .owner_address}" | tee $1.txt
 
-echo "dnsx Done, result & length ==>` wc -l $file_name.resolve.txt `"
+echo "bgpview.io request Done, result & length ==> ` wc -l $1.txt `"

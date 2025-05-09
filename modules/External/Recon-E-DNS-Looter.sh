@@ -16,12 +16,12 @@ cat << EOF
   | |   | / ___ |___ | | | || |_/ ___ ( (_| |     | |  \ \| ____( (__| |_| | | | |
   |_|   |_\_____(___/|_| |_| \__\_____|\___ |     |_|   |_|_____)\____\___/|_| |_|
                                       (_____|         
-                                                          Hashtag_AMIN
+                                                          Hashtag-Recon
                                                   https://github.com/hashtag-amin
                                                   
 EOF
 
-file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\//_/" -e "s/\*//" `
+file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\*//" `
 
 echo "Run dnsx & Extract all record with: $1 file"
 dnsx -l $1 -recon -o $file_name-DNS-all.txt -silent -no-color > /dev/null

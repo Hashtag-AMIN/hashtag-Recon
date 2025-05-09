@@ -23,7 +23,9 @@
 
 Need to install Python & Golang
 
-Also: &nbsp; **nmap, jq, openssl, curl, wget, git, whois, whatweb, wafw00f, apktool**
+## Common tools
+
+&nbsp; [nmap](https://nmap.org), &nbsp;[jq](https://jqlang.org/), &nbsp;[openssl](https://www.openssl.org/),&nbsp; [curl](https://curl.se/), &nbsp;[wget](https://www.gnu.org/software/wget/), &nbsp;[git](https://git-scm.com/), &nbsp;[whois](https://github.com/rfc1036/whois), &nbsp;[whatweb](https://github.com/urbanadventurer/WhatWeb), &nbsp;[wafw00f](https://github.com/EnableSecurity/wafw00f), &nbsp;[postgresql-client](https://wiki.postgresql.org/wiki/PostgreSQL_Clients), &nbsp;[apktool](https://apktool.org/docs/install)
 
 ## External tools:
 
@@ -40,7 +42,7 @@ Also: &nbsp; **nmap, jq, openssl, curl, wget, git, whois, whatweb, wafw00f, apkt
 ```bash
 git clone https://github.com/Hashtag-AMIN/hashtag-Recon.git
 cd hashtag-Recon
-bash ./Tools-Install.sh
+bash ./modules/Tools-Install.sh
 ./hashtag-Recon
 ```
 
@@ -51,8 +53,6 @@ export GOPATH=$HOME/go
 export PATH="$PATH:$GOPATH/bin"
 # Or
 cp /root/go/bin/* /usr/local/sbin/ || cp /home/${USER}/go/bin/* /usr/local/sbin/
-# For global access
-ln -sf $(pwd)/hashtag-Recon /usr/local/sbin/hashtag-Recon
 ```
 
 Need Github Subdomain token (optional But use in some module)
@@ -65,10 +65,11 @@ export $GITHUB_TOKEN="Your_Github_Token"
 
 a little but useful Wordlist in ./wordlist collect from [SecList](https://github.com/danielmiessler/SecLists) & [Bugbounty wordlist](https://github.com/Karanxa/Bug-Bounty-Wordlists) & [assetnote](https://wordlists.assetnote.io/)
 
-Also has script that update wordlist with dynamic assetnote wordlist
+Also has script that update wordlist with dynamic assetnote wordlist, for some module you have to run and download wordlist at first
+
 
 ```bash
-bash ./wordlist-Updater.sh
+bash ./modules/wordlist-Updater.sh
 ```
 
 # workflow
@@ -89,6 +90,7 @@ Also Xmind file in IMG/ folder with Hashtag-Recon.xmind name
 ```php
 └─# ./hashtag-Recon
 
+
            _     _          _                            ______
           (_)   (_)        | |     _                    (_____ \
           ______ _____  ___| |__ _| |_ _____  ____ _____ _____) )_____  ____ ___  ____
@@ -96,18 +98,18 @@ Also Xmind file in IMG/ folder with Hashtag-Recon.xmind name
         | |   | / ___ |___ | | | || |_/ ___ ( (_| |     | |  \ \| ____( (__| |_| | | | |
         |_|   |_\_____(___/|_| |_| \__\_____|\___ |     |_|   |_|_____)\____\___/|_| |_|
                                             (_____|
-                                                                Hashtag_AMIN
+                                                                Hashtag-Recon
                                                         https://github.com/hashtag-amin
 
         External:
             subdomain, Resolver, ptResolver, dnsBrute, tldBrute
-            dnsLooter, IPLooter, openSSL, whois, favicon, portScan
-            vhostScan, apkExtract, liveProbe, Shoter
+            dnsLooter, IPLooter, ASNLooter, openSSL, TLSgrab, whois
+            favicon, portScan, vhostScan, apkExtract, liveProbe, Shoter
 
         Internal:
-            crawler, JSEnum, roboMap, dorcker, techDetect
+            crawler, JSEnum, roboMap, dorker, techDetect
             paramExtract, hiddenParam, hiddenHeader
-          
+
         others:
             Fuzzer, Tamper, Extractor, Spliter
 
@@ -136,7 +138,7 @@ Full document of Usage of this tools available
 ### For External recon, available Modules is:
 
 * ## subdomain
-    * Find subdomain with Providers, SSL, Reverse Whois, Github, WebHistory & ... in 3 mode:
+    * Find subdomain with Providers, SSL, Reverse Whois, Github, crt.sh, WebHistory & ... in 3 mode:
         * Light: Find subdomain fast, But not completely
         * heavy: Find subdomain completely, But slow
         * recursive: Find 2nd or 3rd level of subdomains
@@ -151,6 +153,7 @@ Full document of Usage of this tools available
     * Brute force on subdomains with useful wordlist in two mode:
         * light: Top 500k subdomain,3 Lenght Characters & efficient wordlist for dnsgen
         * heavy: Top 1M subdomain,4 Lenght Characters & complete wordlist for dnsgen
+        * full : httparchive_subdomains, best-dns-wordlist.txt, 2m-subdomains.txt, 4 Lenght Characters & complete wordlist for dnsgen
 
 * ## tldBrute
     * Fuzz TLD(Top Level Domain) of domain with dnsx
@@ -160,6 +163,12 @@ Full document of Usage of this tools available
 
 * ## IPLooter
     * Extract details of IP address such as: CIDRs, ASN number, RIR Information & ...
+
+* ## ASNLooter
+    * Extract details of ASN number such as: Email Contacts, ASN description, Website & ...
+
+* ## TLSgrap
+    * Grab passive unique DNS names from SSL certificates using a list of subdomains, CIDR, IPs.
 
 * ## openSSL
     * More details of SSL/TLS with openSSL command
@@ -172,10 +181,8 @@ Full document of Usage of this tools available
 
 * ## portScan
     * with Legend Nmap, scan CIDRs, IPs and domains in 4 mode:
-        * ssl-light: Scan top ports use SSL/TLS for find certificate on IP.
-        * ssl-heavy: Scan known ports use SSL/TLS
         * http: Scan known ports use http
-        * top: Scan 1000 top ports
+        * top: Scan top selective ports
 
 * ## vhostScan
     * Fuzzing Host header for find more hosts with 3 patterns:
@@ -207,7 +214,7 @@ Full document of Usage of this tools available
     *  Crawl website & earn more urls in 3 mode:
         * headless: Deep crawl and use headless browser
         * active: Active crawl and extract new path from response and JS files
-        * passive: passive crawl without Send HTTP request on target, use gau, gauplus & waybackurls
+        * passive: passive crawl without Send HTTP request on target, use gau & waybackurls
 
 * ## JSEnum
     * With JS files, able to process that in 3 mode:
@@ -220,7 +227,7 @@ Full document of Usage of this tools available
 * ## roboMap
     * find old and robots & sitemap archive.org and Send request to website for find robots & sitemap, then extract all path
 
-* ## dorcker
+* ## dorker
     * Search Query on search engines such as: google, bing, yahoo, ask, duck, shodan
 
 * ## techDetect
@@ -231,13 +238,11 @@ Full document of Usage of this tools available
 
 * ## hiddenParam
     * Hidden Parameter Discovery with x8 in tow mode:
-        * light: Scan Specified Method & Custom wordlist
-        * heavy: Scan GET & POST with Top parameters wordlist from assetnote
+        * a wrapper of x8 with default wordlist and add random user-agent and browser headers
 
 * ## hiddenHeader
     * Hidden Header Discovery with x8 in tow mode:
-        * light: Scan Specified Method & Custom wordlist of Headers
-        * heavy: Scan GET & POST with all Headers wordlist
+        * a wrapper of x8 with default wordlist contain almost all http headers
 
 #### [For Help and Usage of Internal Modules, Checkout Wiki](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/Intrenal-Recon)
 
@@ -262,7 +267,7 @@ Full document of Usage of this tools available
     * Extract input file that result of other Modules with these property:
         * liveprobe: Extract liveProbe module result with HTTP Status code (20X, 30X, 4XX, 50X)
         * vhost: Extract vhostScan module result with HTTP Status code and Host header value
-        * crawl: Extract crawler module result with extentions(.php, .js, .jsp, .asp, .aspx) & urls contains with and without parameter
+        * crawl: Extract crawler module result with extentions(.php, .js, .jsp, .asp, .aspx, html, htm) & urls contains with and without parameter
         * fuzz: Extract fuzzer module result with HTTP Status code
         * ip: Extract IPs from file to input
         * diff: Extract diffrence between two file in -dns but not in -provider file(Check priority)
@@ -283,23 +288,6 @@ Contributions are always welcome! I believe that great tools are built by great 
 Dive in, share your expertise, and let’s create something amazing. Every pull request, issue, or suggestion helps shape the future of this tool. Let’s collaborate and innovate! 🌟
 
 If you'd like to contribute to this project, [checkout wiki in structure page](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/structure)
-
-<hr>
-
-# Finally special thanks
-
-### My dear & lovely Professor Mr [JADI](https://github.com/jadijadi)
-
-* I learned & learning valuable things from you, both in life and on the Python & Linux
-
-
-### Thansk a lot, I learn many thing from both of you 🌱
-
-
-* My handsome Professor [Borna Nematzade](https://github.com/bnematzadeh)
-
-
-* And My lovely Professor [yashar shahinzade](https://github.com/Voorivex)
 
 <hr style="width: 40%;" >
 

@@ -17,12 +17,12 @@ cat << EOF
   | |   | / ___ |___ | | | || |_/ ___ ( (_| |     | |  \ \| ____( (__| |_| | | | |
   |_|   |_\_____(___/|_| |_| \__\_____|\___ |     |_|   |_|_____)\____\___/|_| |_|
                                       (_____|         
-                                                          Hashtag_AMIN
+                                                          Hashtag-Recon
                                                   https://github.com/hashtag-amin
                                                   
 EOF
 
-file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\//_/" -e "s/\*//" `
+file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\*//" `
 
 echo "Start split Input to files by $2 lines:"
 

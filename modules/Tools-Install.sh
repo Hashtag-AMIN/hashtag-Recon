@@ -9,7 +9,7 @@ cat << EOF
   | |   | / ___ |___ | | | || |_/ ___ ( (_| |     | |  \ \| ____( (__| |_| | | | |
   |_|   |_\_____(___/|_| |_| \__\_____|\___ |     |_|   |_|_____)\____\___/|_| |_|
                                       (_____|         
-                                                          Hashtag_AMIN
+                                                          Hashtag-Recon
                                                   https://github.com/hashtag-amin
                                                   
 EOF
@@ -18,9 +18,9 @@ mkdir tools-src
 cd tools-src
 
 echo "First we need isntall common tools"
-echo "such as Nmap, jq, curl, wget, git, whois & apktool ..."
+echo "such as Nmap, jq, curl, wget, git, postgresql-client, whois & apktool ..."
     apt update -y
-    apt install nmap jq curl wget git whois apktool -y
+    apt install nmap jq curl wget git whois apktool postgresql-client -y
 
 #===============
 echo "second install External Recon Tools"

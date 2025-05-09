@@ -1,9 +1,7 @@
-#!/bin/bash
-
-if [ $# -ne 3 ]
+if [ $# -ne 2 ]
   then
     echo "Args is not Valid"
-    echo "Usage: bash Recon-I-hidden-Param-light.sh <Method(GET|POST|PUT|...)> <Url(http://exapmle.com[/param?key=value])> <Custom-param-wordlist(params.txt)>"
+    echo "Usage: bash Recon-E-PortScan-top.sh <file(example.com.CIDR.txt)> <Top Ports Numer>"
     exit
 fi
 
@@ -16,15 +14,15 @@ cat << EOF
   | |   | / ___ |___ | | | || |_/ ___ ( (_| |     | |  \ \| ____( (__| |_| | | | |
   |_|   |_\_____(___/|_| |_| \__\_____|\___ |     |_|   |_|_____)\____\___/|_| |_|
                                       (_____|         
-                                                          Hashtag_AMIN
+                                                          Hashtag-Recon
                                                   https://github.com/hashtag-amin
                                                   
 EOF
 
-domain_name=` echo $2 | cut -d / -f3 `
+file_name=` echo $1 | sed -e "s/.txt$//" -e "s/\*//" `
 
-echo "Start x8 with Custom wordlist [$1]: $3 ..."
+echo "Start Nmap for Scan Top Ports for $1"
 
-x8 -u "$2" --wordlist $3 --max 8 --follow-redirects -X $1 -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0" --output $domain_name-$1.txt
+nmap -iL $1 -T5 --min-parallelism 64 --min-hostgroup 64 --max-retries 2 --max-scan-delay 20ms --min-rate 500 -sS -Pn --top-ports $2 -oN $file_name-top-Port.txt > /dev/null
 
-echo " x8 with $3 wordlist Done, result & length ==> ` wc -l $domain_name-$1.txt `"
+echo "Nmap with Nmap Done, result & length ==> ` wc -l $file_name-top-Port.txt `"
