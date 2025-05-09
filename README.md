@@ -13,7 +13,7 @@
 
 [Installation](https://github.com/Hashtag-AMIN/hashtag-Recon#Installation) &nbsp; [Workflow](https://github.com/Hashtag-AMIN/hashtag-Recon#workflow) &nbsp; [Usage](https://github.com/Hashtag-AMIN/hashtag-Recon#Usage) &nbsp; [Documentation](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki)
 
-&nbsp; [Modules & Features](https://github.com/Hashtag-AMIN/hashtag-Recon#Modules--Features) &nbsp; [Special Thanks](https://github.com/Hashtag-AMIN/hashtag-Recon#Finally-special-thanks)
+&nbsp; [Modules & Features](https://github.com/Hashtag-AMIN/hashtag-Recon#Modules--Features) &nbsp; [In-Future](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/05-%E2%80%90-Structure#what-happen-in-future)
 
 </div>
 
@@ -79,7 +79,7 @@ able to do all steps in this flow with hashtag-Recon
 
 ![workflow](./IMG/Hashtag-Recon-wrokflow.png)
 
-[More details and autopsy workflow, Checkout Wiki](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/Workflow)
+[More details and autopsy workflow, Checkout Wiki](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/01-%E2%80%90-Workflow)
 
 Also Xmind file in IMG/ folder with Hashtag-Recon.xmind name
 
@@ -202,7 +202,7 @@ Full document of Usage of this tools available
     * Take screeenshot from urls 
         * at first time httpx install headless browser :)
 
-#### [For Help and Usage of External Modules, Checkout Wiki](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/External-Recon)
+#### [For Help and Usage of External Modules, Checkout Wiki](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/02-%E2%80%90-External%E2%80%90Recon)
 
 <hr>
 
@@ -244,7 +244,7 @@ Full document of Usage of this tools available
     * Hidden Header Discovery with x8 in tow mode:
         * a wrapper of x8 with default wordlist contain almost all http headers
 
-#### [For Help and Usage of Internal Modules, Checkout Wiki](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/Intrenal-Recon)
+#### [For Help and Usage of Internal Modules, Checkout Wiki](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/03-%E2%80%90-Intrenal%E2%80%90Recon)
 
 <hr>
 
@@ -278,7 +278,7 @@ Full document of Usage of this tools available
         * file: Input split to X files
         * size: Input split to files have X size(20M|100K|2G)
 
-#### [For Help and Usage of Others Modules, Checkout Wiki](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/Others)
+#### [For Help and Usage of Others Modules, Checkout Wiki](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/04-%E2%80%90-Others)
 
 
 ## Contributing
@@ -287,7 +287,7 @@ Contributions are always welcome! I believe that great tools are built by great 
 
 Dive in, share your expertise, and let’s create something amazing. Every pull request, issue, or suggestion helps shape the future of this tool. Let’s collaborate and innovate! 🌟
 
-If you'd like to contribute to this project, [checkout wiki in structure page](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/structure)
+If you'd like to contribute to this project, [checkout wiki in structure page](https://github.com/Hashtag-AMIN/hashtag-Recon/wiki/05-%E2%80%90-Structure)
 
 <hr style="width: 40%;" >
 
