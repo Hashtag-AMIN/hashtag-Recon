@@ -169,7 +169,7 @@ def run_module():
             dnsbrute_subdomain.print_usage()
 
 #=======================
-    # Recon-E-DNS-Looter.sh
+    # Recon-E-dns-Looter.sh
             
     elif sys.argv[1].lower() == "dnslooter":
         dnsExtract_subdomain = argparse.ArgumentParser(prog='hashtag-Recon', formatter_class=SingleMetavarFormatter, 
@@ -199,7 +199,7 @@ def run_module():
         domain_list = dnsExtract_args.subs
 
         if domain_list:
-            subprocess.run(["bash", "./modules/External/Recon-E-DNS-Looter.sh",domain_list], check=True)
+            subprocess.run(["bash", "./modules/External/Recon-E-dns-Looter.sh",domain_list], check=True)
         else:
             dnsExtract_subdomain.print_usage()
 
@@ -750,7 +750,7 @@ def run_module():
             paramextract.print_usage()
 
 #=======================
-    # Recon-I-hidden-Param-(heavy|light).sh
+    # Recon_I_hidden_Param.py
             
     elif sys.argv[1].lower() == "hiddenparam":
         hiddenParam = argparse.ArgumentParser(prog='hashtag-Recon', formatter_class=SingleMetavarFormatter, 
@@ -811,7 +811,7 @@ def run_module():
             hiddenParam.print_usage()
 
 #=======================
-    # Recon-I-hidden-header-(heavy|light).sh
+    # Recon_I_hidden_Header.py
             
     elif sys.argv[1].lower() == "hiddenheader":
         hiddenHeader = argparse.ArgumentParser(prog='hashtag-Recon', formatter_class=SingleMetavarFormatter, 

@@ -24,11 +24,10 @@ echo "such as Nmap, jq, curl, wget, git, postgresql-client, whois & apktool ..."
 
 #===============
 echo "second install External Recon Tools"
-echo "Such as : subfinder, waybackurls, amass, github-subdomains"
+echo "Such as : subfinder, waybackurls, github-subdomains"
 
     go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
     go install github.com/tomnomnom/waybackurls@latest
-    go install -v github.com/owasp-amass/amass/v4/...@master
     go install github.com/gwen001/github-subdomains@latest
 
 echo "ffuf, dnsx, cut-cdn, shuffledns"

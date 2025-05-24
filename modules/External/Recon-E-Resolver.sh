@@ -27,4 +27,4 @@ echo "Run dnsx For Resolve Domains: $1"
 
 dnsx -l $1 -recon -silent -no-color -threads 200 | cut -d " " -f1 | sort -u > $file_name.resolve.txt
 
-echo "dnsx Done, result & length ==>` wc -l $file_name.resolve.txt `"
+echo "dnsx Done, result & length ==> ` wc -l $file_name.resolve.txt `"

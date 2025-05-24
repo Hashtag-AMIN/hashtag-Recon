@@ -28,7 +28,6 @@ for sub in $( cat $1 )
 do
     subfinder -d $sub -all -silent -no-color >> passive_recursive.txt
     assetfinder --subs-only $sub  >> passive_recursive.txt
-    curl -s "https://jldc.me/anubis/subdomains/$sub" | jq -r ".[]" | sort -u >> passive_recursive.txt
 done
 
 sort -u passive_recursive.txt > $file_name-recursive.txt

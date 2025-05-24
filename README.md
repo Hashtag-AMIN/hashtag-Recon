@@ -29,7 +29,7 @@ Need to install Python & Golang
 
 ## External tools:
 
-&nbsp;&nbsp;&nbsp;&nbsp; [Subfinder](https://github.com/projectdiscovery/subfinder), &nbsp; [Sublist3r](https://github.com/aboul3la/Sublist3r), &nbsp; [assetfinder](https://github.com/tomnomnom/assetfinder), &nbsp; [amass](https://github.com/owasp-amass/amass), &nbsp; [github-subdomains](https://github.com/gwen001/github-subdomains), &nbsp; [dnsx](https://github.com/projectdiscovery/dnsx), &nbsp; [shuffledns](https://github.com/projectdiscovery/shuffledns), &nbsp; [massdns](https://github.com/blechschmidt/massdns), &nbsp; [cut-cdn](https://github.com/ImAyrix/cut-cdn), &nbsp; [ffuf](https://github.com/ffuf/ffuf), &nbsp; [httpx](https://github.com/projectdiscovery/httpx)
+&nbsp;&nbsp;&nbsp;&nbsp; [Subfinder](https://github.com/projectdiscovery/subfinder), &nbsp; [Sublist3r](https://github.com/aboul3la/Sublist3r), &nbsp; [assetfinder](https://github.com/tomnomnom/assetfinder), &nbsp; [github-subdomains](https://github.com/gwen001/github-subdomains), &nbsp; [dnsx](https://github.com/projectdiscovery/dnsx), &nbsp; [shuffledns](https://github.com/projectdiscovery/shuffledns), &nbsp; [massdns](https://github.com/blechschmidt/massdns), &nbsp; [cut-cdn](https://github.com/ImAyrix/cut-cdn), &nbsp; [ffuf](https://github.com/ffuf/ffuf), &nbsp; [httpx](https://github.com/projectdiscovery/httpx)
 
 
 ## Internal tools:
