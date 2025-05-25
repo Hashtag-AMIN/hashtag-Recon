@@ -3,7 +3,7 @@
 if [ $# -ne 1 ]
   then
     echo "Args is not Valid"
-    echo "Usage: bash Recon-E-TLS-grab.sh <List of hosts(IP|CIDR|Domain)"
+    echo "Usage: bash Recon-E-TLS-grab-light.sh <List of hosts(IP|CIDR|Domain)"
     exit
 fi
 
