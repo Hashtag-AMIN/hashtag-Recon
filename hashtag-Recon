@@ -199,7 +199,7 @@ def run_module():
         domain_list = dnsExtract_args.subs
 
         if domain_list:
-            subprocess.run(["bash", "./modules/External/Recon-E-dns-Looter.sh",domain_list], check=True)
+            subprocess.run(["bash", "./modules/External/Recon-E-DNS-Looter.sh",domain_list], check=True)
         else:
             dnsExtract_subdomain.print_usage()
 
