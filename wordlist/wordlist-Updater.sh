@@ -20,22 +20,17 @@ EOF
 sub_wordlist=` curl -s https://wordlists-cdn.assetnote.io/data/automated/ | grep httparchive_subdomains | tail -n 1 | grep -oE "http.*\.txt\"" | sed "s/\"//" `
 
 echo "Start download & update assetnote dynamic wordlist"
-wget https://wordlists-cdn.assetnote.io/data/automated/$sub_wordlist -q
+wget https://wordlists-cdn.assetnote.io/data/automated/$sub_wordlist -O ./httparchive_subdomains.txt
 
-head -n 500000 $sub_wordlist > dns-wordlist-light.txt
-head -n 1000000 $sub_wordlist > dns-wordlist-heavy.txt
-mv $sub_wordlist ../wordlist/httparchive_subdomains.txt
-mv dns-wordlist-light.txt ../wordlist
-mv dns-wordlist-heavy.txt ../wordlist
+head -n 500000 ./httparchive_subdomains.txt > dns-wordlist-light.txt
+head -n 1000000 ./httparchive_subdomains.txt > dns-wordlist-heavy.txt
 
-echo "Download and move dns-wordlist-light.txt, dns-wordlist-heavy.txt, httparchive_subdomains.txt to wordlist dir"
+echo "Download dns-wordlist-light.txt, dns-wordlist-heavy.txt, httparchive_subdomains.txt"
 
 echo "Now Download huge Subdomain files, best-dns-wordlist.txt and 2m-subdomains.txt"
-wget https://wordlists-cdn.assetnote.io/data/manual/best-dns-wordlist.txt -q
-mv best-dns-wordlist.txt ../wordlist
+wget https://wordlists-cdn.assetnote.io/data/manual/best-dns-wordlist.txt
 
-wget https://wordlists-cdn.assetnote.io/data/manual/2m-subdomains.txt -q 
-mv 2m-subdomains.txt ../wordlist
+wget https://wordlists-cdn.assetnote.io/data/manual/2m-subdomains.txt
 
 
 # x8-param-20k.txt
@@ -44,11 +39,8 @@ mv 2m-subdomains.txt ../wordlist
 param_wordlist=` curl -s https://wordlists-cdn.assetnote.io/data/automated/ | grep httparchive_parameters_top_1m | tail -n 1 | grep -oE "http.*\.txt\"" | sed "s/\"//" `
 
 echo "Start download & update Parameter wordlist"
-wget https://wordlists-cdn.assetnote.io/data/automated/$param_wordlist -q
+wget https://wordlists-cdn.assetnote.io/data/automated/$param_wordlist -O ./httparchive_parameters_top_1m.txt
 
-head -n 20000 $param_wordlist > x8-param-20k.txt
-
-mv $param_wordlist ../wordlist/httparchive_parameters_top_1m.txt
-mv x8-param-20k.txt ../wordlist
+head -n 20000 ./httparchive_parameters_top_1m.txt > x8-param-20k.txt
 
 echo "Update wordlist is completed"

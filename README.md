@@ -55,21 +55,24 @@ export PATH="$PATH:$GOPATH/bin"
 cp /root/go/bin/* /usr/local/sbin/ || cp /home/${USER}/go/bin/* /usr/local/sbin/
 ```
 
+### Wordlist
+
+a little but useful Wordlist in ./wordlist collect from [SecList](https://github.com/danielmiessler/SecLists) & [assetnote](https://wordlists.assetnote.io/)
+
+Also has script that update wordlist with dynamic assetnote wordlist, tools and scripts need these wordlist 
+
+ **for some module you <u>have to</u> run and download wordlist at first, run in wordlist directory**
+
+
+```bash
+cd wordlist
+bash ./wordlist-Updater.sh
+```
+
 Need Github Subdomain token (optional But use in some module)
 
 ```bash
 export $GITHUB_TOKEN="Your_Github_Token"
-```
-
-### Wordlist
-
-a little but useful Wordlist in ./wordlist collect from [SecList](https://github.com/danielmiessler/SecLists) & [Bugbounty wordlist](https://github.com/Karanxa/Bug-Bounty-Wordlists) & [assetnote](https://wordlists.assetnote.io/)
-
-Also has script that update wordlist with dynamic assetnote wordlist, for some module you have to run and download wordlist at first
-
-
-```bash
-bash ./modules/wordlist-Updater.sh
 ```
 
 # workflow
@@ -180,7 +183,7 @@ Full document of Usage of this tools available
     * Take hash from favicon of websites for search in search engines
 
 * ## portScan
-    * with Legend Nmap, scan CIDRs, IPs and domains in 4 mode:
+    * with Legend Nmap, scan CIDRs, IPs and domains in 2 mode:
         * http: Scan known ports use http
         * top: Scan top selective ports
 
@@ -253,10 +256,10 @@ Full document of Usage of this tools available
 ### In 'Others' Module, Some process need in both last Modules:
 
 * ## Fuzzer
-    * Fuzz url with sensetive dir, file or custom wordlist in 3 mode:
-        * directory: Fuzzing in end path of url with sensetive directory wordlist
-        * file:  Fuzzing in end path of url with wordlists that include sensetive extention of files
-        * Custom: Use Custom wordlist and FUZZ keyword in url for Fuzzing
+    * wrapper for ffuf and make better fuzzing:
+        * add random User-agent
+        * Also can fuzz with raw request
+        * able to add additional command for ffuf
 
 * ## Tamper
     *  Tamper http method of request with 2 mode:

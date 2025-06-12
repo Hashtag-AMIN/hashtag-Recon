@@ -36,12 +36,17 @@ echo $1 | assetfinder -subs-only > $1-assetfinder.txt
 echo "assetfinder Done, result & length ==> ` wc -l $1-assetfinder.txt `"
 
 echo
+echo "Send Request to get subdomain from abuseipdb..."
+curl -s "https://www.abuseipdb.com/whois/{domain}" -H "user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36" -b "abuseipdb_session=YOUR-SESSION" | grep -E "<li>\\w.*</li>" | sed -E "s/<\\/?li>//g" | sed "s|$|.{domain}|" | tr -d " " > $1-abuseipdb.txt
+echo "abuseipdb Done, result & length ==> ` wc -l $1-abuseipdb.txt `"
+
+echo
 echo "Send Request to get subdomain from content-security-policy header ..."
 curl -vsLk $1 --stderr - | awk '/content-security-policy:/' | grep -Eo "[a-zA-Z0-9./?=_-]*" |  sed -e '/\./!d' -e '/[^A-Za-z0-9._-]/d' -e 's/^\.//' | sort -u > $1-csp.txt
 echo "content-security-policy Done, result & length ==> ` wc -l $1-csp.txt `"
 
-sort -u $1-subfinder.txt $1-crtsh.txt $1-assetfinder.txt $1-csp.txt > $1-provider.txt
-rm $1-subfinder.txt $1-crtsh.txt $1-assetfinder.txt $1-csp.txt
+sort -u $1-subfinder.txt $1-crtsh.txt $1-assetfinder.txt $1-abuseipdb.txt $1-csp.txt > $1-provider.txt
+rm $1-subfinder.txt $1-crtsh.txt $1-assetfinder.txt $1-abuseipdb.txt $1-csp.txt
 
 echo "All Subdomains result & length ==> ` wc -l $1-provider.txt`"
 echo

@@ -22,27 +22,27 @@ cat << EOF
 EOF
 
 echo "Run shuffledns & Brute force on: $1 with httparchive_subdomains assetNote subdomain"
-shuffledns -domain $1 -resolver ./wordlist/dns-resolvers.txt -wordlist ./wordlist/httparchive_subdomains.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME -t NS" -silent -output $1.dnsBrute-1st.txt > /dev/null 2>&1
+shuffledns -domain $1 -resolver ./wordlist/resolvers.txt -wordlist ./wordlist/httparchive_subdomains.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME -t NS" -silent -output $1.dnsBrute-1st.txt > /dev/null 2>&1
 echo "shuffledns Done, result & length ==> ` wc -l $1.dnsBrute-1st.txt `"
 
 echo "Run shuffledns & Brute force on: $1 with best-dns-wordlist.txt wordlist:"
-shuffledns -domain $1 -resolver ./wordlist/dns-resolvers.txt -wordlist ./wordlist/best-dns-wordlist.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME -t NS" -silent -output $1.dnsBrute-2nd.txt > /dev/null 2>&1
+shuffledns -domain $1 -resolver ./wordlist/resolvers.txt -wordlist ./wordlist/best-dns-wordlist.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME -t NS" -silent -output $1.dnsBrute-2nd.txt > /dev/null 2>&1
 echo "shuffledns Done, result & length ==> ` wc -l $1.dnsBrute-2nd.txt `"
 
 echo "Run shuffledns & Brute force on: $1 with 2m-subdomains.txt wordlist:"
-shuffledns -domain $1 -resolver ./wordlist/dns-resolvers.txt -wordlist ./wordlist/2m-subdomains.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME -t NS" -silent -output $1.dnsBrute-3rd.txt > /dev/null 2>&1
+shuffledns -domain $1 -resolver ./wordlist/resolvers.txt -wordlist ./wordlist/2m-subdomains.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME -t NS" -silent -output $1.dnsBrute-3rd.txt > /dev/null 2>&1
 echo "shuffledns Done, result & length ==> ` wc -l $1.dnsBrute-3rd.txt `"
 
 echo "Run shuffledns & Brute force on: $1 with 4-with-char.txt wordlist:"
-shuffledns -domain $1 -resolver ./wordlist/dns-resolvers.txt -wordlist ./wordlist/dns-wordlist-4-with-char.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME -t NS" -silent -output $1.dnsBrute-4th.txt > /dev/null 2>&1
+shuffledns -domain $1 -resolver ./wordlist/resolvers.txt -wordlist ./wordlist/4-length-with-char.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME -t NS" -silent -output $1.dnsBrute-4th.txt > /dev/null 2>&1
 echo "shuffledns Done, result & length ==> ` wc -l $1.dnsBrute-4th.txt `"
 
 echo "Run dnsgen on: $1"
-sort -u $2 $1.dnsBrute-1st.txt $1.dnsBrute-2nd.txt $1.dnsBrute-3rd.txt $1.dnsBrute-4th.txt | dnsgen --wordlist ./wordlist/dns-dnsgen-wordlist-heavy.txt - > $1.dnsgen.txt
+sort -u $2 $1.dnsBrute-1st.txt $1.dnsBrute-2nd.txt $1.dnsBrute-3rd.txt $1.dnsBrute-4th.txt | dnsgen --wordlist ./wordlist/dnsgen-heavy.txt - > $1.dnsgen.txt
 echo "dnsgen Done, result & length ==> ` wc -l $1.dnsgen.txt`"
 
 echo "Run shuffledns & Resolving on: $1.dnsgen.txt"
-shuffledns -list $1.dnsgen.txt -resolver ./wordlist/dns-resolvers.txt -mode resolve -massdns-cmd "-t AAAA -t CNAME -t NS" -output $1.dnsBrute-5th.txt > /dev/null 2>&1
+shuffledns -list $1.dnsgen.txt -resolver ./wordlist/resolvers.txt -mode resolve -massdns-cmd "-t AAAA -t CNAME -t NS" -output $1.dnsBrute-5th.txt > /dev/null 2>&1
 echo "shuffledns Done, result & length ==> ` wc -l $1.dnsBrute-5th.txt `"
 
 sort -u $1.dnsBrute-1st.txt  $1.dnsBrute-2nd.txt $1.dnsBrute-3rd.txt $1.dnsBrute-4th.txt  $1.dnsBrute-5th.txt > $1.dnsBrute.txt

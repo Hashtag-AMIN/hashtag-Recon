@@ -22,19 +22,19 @@ cat << EOF
 EOF
 
 echo "Run shuffledns & Brute force on: $1 with TOP 500k subdomain"
-shuffledns -domain $1 -resolver ./wordlist/dns-resolvers.txt -wordlist ./wordlist/dns-wordlist-light.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME -t NS -t TXT -t SRV -t SOA -t CAA" -silent -output $1.dnsBrute-1st.txt > /dev/null 2>&1
+shuffledns -domain $1 -resolver ./wordlist/resolvers.txt -wordlist ./wordlist/dns-wordlist-light.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME" -silent -output $1.dnsBrute-1st.txt > /dev/null 2>&1
 echo "shuffledns Done, result & length ==> ` wc -l $1.dnsBrute-1st.txt `"
 
 echo "Run shuffledns & Brute force on: $1 with 3-with-char.txt wordlist:"
-shuffledns -domain $1 -resolver ./wordlist/dns-resolvers.txt -wordlist ./wordlist/dns-wordlist-3-with-char.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME -t NS -t TXT -t SRV -t SOA -t CAA" -silent -output $1.dnsBrute-2nd.txt > /dev/null 2>&1
+shuffledns -domain $1 -resolver ./wordlist/resolvers.txt -wordlist ./wordlist/3-length-with-char.txt -mode bruteforce -massdns-cmd "-t AAAA -t CNAME" -silent -output $1.dnsBrute-2nd.txt > /dev/null 2>&1
 echo "shuffledns Done, result & length ==> ` wc -l $1.dnsBrute-2nd.txt `"
 
 echo "Run dnsgen on: $1"
-sort -u $2 $1.dnsBrute-1st.txt $1.dnsBrute-2nd.txt | dnsgen --wordlist ./wordlist/dns-dnsgen-wordlist-light.txt - > $1.dnsgen.txt
+sort -u $2 $1.dnsBrute-1st.txt $1.dnsBrute-2nd.txt | dnsgen --wordlist ./wordlist/dnsgen-light.txt - > $1.dnsgen.txt
 echo "dnsgen Done, result & length ==> ` wc -l $1.dnsgen.txt `"
 
 echo "Run shuffledns & Resolving on: $1.dnsgen.txt"
-shuffledns -list $1.dnsgen.txt -resolver ./wordlist/dns-resolvers.txt -mode resolve -massdns-cmd "-t AAAA -t CNAME -t NS -t TXT -t SRV -t SOA -t CAA" -output $1.dnsBrute-3rd.txt > /dev/null 2>&1
+shuffledns -list $1.dnsgen.txt -resolver ./wordlist/resolvers.txt -mode resolve -massdns-cmd "-t AAAA -t CNAME" -output $1.dnsBrute-3rd.txt > /dev/null 2>&1
 echo "shuffledns Done, result & length ==> ` wc -l $1.dnsBrute-3rd.txt `"
 
 sort -u $1.dnsBrute-1st.txt  $1.dnsBrute-2nd.txt $1.dnsBrute-3rd.txt > $1.dnsBrute.txt

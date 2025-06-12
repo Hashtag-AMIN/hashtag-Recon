@@ -299,9 +299,9 @@ def run_module():
 
         if domain_hosts:
             if light:
-                subprocess.run(["bash", "./modules/External/Recon-E-TLS-grab-light.sh", domain_hosts], check=True)
+                subprocess.run(["bash", "./modules/External/Recon-E-tls-grab-light.sh", domain_hosts], check=True)
             elif heavy:
-                subprocess.run(["bash", "./modules/External/Recon-E-TLS-grab-heavy.sh", domain_hosts], check=True)
+                subprocess.run(["bash", "./modules/External/Recon-E-tls-grab-heavy.sh", domain_hosts], check=True)
             else:
                 tlsgrab.print_usage()
         else:
@@ -831,7 +831,7 @@ def run_module():
         hiddenHeader.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
         hiddenHeader.add_argument('-u','--url', nargs='+',type=str, default=None, help='Url/urls or file contain Urls for Hidden Header Discovery [-u https://url1 http://url2]')
         hiddenHeader.add_argument('-r','--request', help='File containing the raw http request [--proto is default: https, change with -a command: -a="--proto http"]', type=pathlib.Path)
-        hiddenHeader.add_argument('-w','--wordlist',type=pathlib.Path, default="./wordlist/x8-header-lowercase.txt", help='The file with headers [default: ./wordlist/x8-header-lowercase.txt(Almost all Http Headers)]')
+        hiddenHeader.add_argument('-w','--wordlist',type=pathlib.Path, default="./wordlist/x8-header-mixcase.txt", help='The file with headers [default: ./wordlist/x8-header-mixcase.txt(Almost all Http Headers)]')
         hiddenHeader.add_argument('-X','--method', type=str, nargs='+', help='Multiple values are supported: -X GET POST')
         hiddenHeader.add_argument('-H','--header', type=str, nargs='+', default=None, help="Http Header to add request Example: -H 'one:one' 'two:two'")
         hiddenHeader.add_argument('-m','--max', type=int, default=30, help='Change the maximum number of headers per request, default is <= 30 for Headers')
@@ -903,43 +903,64 @@ def run_module():
 
 # Custom
 #=======================
-        # Recon-fuzz-custom.sh
+        # Recon_fuzzer.py
             
     elif sys.argv[1].lower() == "fuzzer":
         fuzzer = argparse.ArgumentParser(prog='hashtag-Recon', formatter_class=SingleMetavarFormatter, 
         usage="""
 
-        Fuzz url with sensetive dir, file or custom wordlist
-        if fuzz with Custom wordlist use FUZZ keyword
+        Hidden Parameter Discovery with x8
 
         Example:
-                ./hashtag-Recon fuzzer -url http://example.com -dir
-                ./hashtag-Recon fuzzer -url http://example.com -file
-                ./hashtag-Recon fuzzer -url http://example.com/FUZZ -wordlist ./Custom-wordlist.txt
-        Output:
-                example.com-fuzz.csv
-                example.com-fuzz-dir.csv
-                example.com-fuzz-file.csv
-        """)
+                ./hashtag-Recon fuzzer -u "http://example.com/FUZZ" -w ./wordlist.txt
+                ./hashtag-Recon fuzzer -u "http://example.com" -w ./wordlist.txt -X PUT -d "a=b&c=FUZZ" -b "param=value;"
+                ./hashtag-Recon fuzzer -u "http://example.com/?key=FUZZ" -w ./wordlist.txt -t 5 -a="-fc 403,401"
+                ./hashtag-Recon fuzzer -request ./raw-req.txt -w ./wordlist.txt -a="-request-proto http"
+        Output: 
+                example.com-fuzzer.txt
+                """)
         fuzzer.add_argument('Mode', type=str, default=None, help='Mode to Run Script')
-        fuzzer.add_argument('-url', type=str, default=None, help='Url to fuzzing')
-        fuzzer.add_argument('-wordlist', type=str, default=None, help='Custom wordlist for FUZZ')
-        fuzzer.add_argument('-dir', action='store_true',default=False, help='Enable for directory fuzzing')
-        fuzzer.add_argument('-file', action='store_true',default=False, help='Enable for file fuzzing')
-        fuzzer_args = fuzzer.parse_args()
+        fuzzer.add_argument('-u', '--url', help='Target URL', type=str)
+        fuzzer.add_argument('-request','--req-raw', help='File containing the raw http request [-request-proto is default: https, change with -a command: -a="-request-proto http"]', type=pathlib.Path)
+        fuzzer.add_argument('-H', '--header', action='append', help='Custom headers to add to requests,  Multiple -H flags are accepted.', type=str)
+        fuzzer.add_argument('-b', '--cookie', help='Cookie data `"NAME1=VALUE1; NAME2=VALUE2"` for copy as curl[ffuf] functionality.',  type=str)
+        fuzzer.add_argument('-d', '--data', help='Body to send with the request', type=str)
+        fuzzer.add_argument('-X', '--method', help='HTTP method to use (e.g.,GET,POST,PUT)', type=str)
+        fuzzer.add_argument('-r', '--redirect', help='Follow redirects (default: false)', action='store_true')
+        fuzzer.add_argument('-w', '--wordlist', required=True, action='append', help='Path to wordlist,  Multiple -w/--wordlist flags are accepted and fuzz with all wordlist.', type=pathlib.Path)
+        fuzzer.add_argument('-t', '--thread', help='Threads use in ffuf', type=int)
+        fuzzer.add_argument('-p', '--delay', help='Random delay range use in ffuf, For example "0.5-2.0" or "0.3"')
+        fuzzer.add_argument('-a', '--additional-cmd', help='Additional commands for FFUF', type=str)
+        
+        fuzzer_args =fuzzer.parse_args()
         url = fuzzer_args.url
+        request = fuzzer_args.req_raw
+        headers = fuzzer_args.header
+        cookie = fuzzer_args.cookie
+        data = fuzzer_args.data
+        method = fuzzer_args.method
+        redirect = fuzzer_args.redirect
         wordlist = fuzzer_args.wordlist
-        dir = fuzzer_args.dir
-        file = fuzzer_args.file
+        thread = fuzzer_args.thread
+        delay = fuzzer_args.delay
+        additional_cmd = fuzzer_args.additional_cmd
 
-        if url and wordlist:
-                subprocess.run(["bash", "./modules/Custom/Recon-fuzz-custom.sh", url, wordlist], check=True)
-        elif url and dir and (wordlist == None):
-                subprocess.run(["bash", "./modules/Custom/Recon-fuzz-dir.sh", url], check=True)
-        elif url and file and (wordlist == None):
-                subprocess.run(["bash", "./modules/Custom/Recon-fuzz-file.sh", url], check=True)
-        else:
+        if url and request:
+                print(banner)
+                print("Use Only -u/--url or -request/--req-raw flag")
                 fuzzer.print_usage()
+        elif url:
+            from modules.Custom.Recon_fuzzer import run_ffuf_url
+            print(banner)
+            final_cmd = run_ffuf_url(url, headers, cookie, data, method, redirect, wordlist, thread, delay, additional_cmd)
+            subprocess.run(final_cmd, check=True)
+        elif request:
+            from modules.Custom.Recon_fuzzer import run_ffuf_raw
+            print(banner)
+            final_cmd = run_ffuf_raw(request, headers, cookie, data, method, redirect, wordlist, thread, delay, additional_cmd)
+            subprocess.run(final_cmd, check=True)
+        else:
+            fuzzer.print_usage()
 
 #=======================
     # file Extractors
