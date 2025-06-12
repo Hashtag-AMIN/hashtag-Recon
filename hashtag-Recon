@@ -299,9 +299,9 @@ def run_module():
 
         if domain_hosts:
             if light:
-                subprocess.run(["bash", "./modules/External/Recon-E-tls-grab-light.sh", domain_hosts], check=True)
+                subprocess.run(["bash", "./modules/External/Recon-E-TLS-grab-light.sh", domain_hosts], check=True)
             elif heavy:
-                subprocess.run(["bash", "./modules/External/Recon-E-tls-grab-heavy.sh", domain_hosts], check=True)
+                subprocess.run(["bash", "./modules/External/Recon-E-TLS-grab-heavy.sh", domain_hosts], check=True)
             else:
                 tlsgrab.print_usage()
         else:
