@@ -45,7 +45,7 @@ echo "assetfinder Done, result & length ==> ` wc -l $1-assetfinder.txt `"
 
 echo
 echo "Send Request to get subdomain from abuseipdb..."
-curl -s "https://www.abuseipdb.com/whois/{domain}" -H "user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36" -b "abuseipdb_session=YOUR-SESSION" | grep -E "<li>\\w.*</li>" | sed -E "s/<\\/?li>//g" | sed "s|$|.{domain}|" | tr -d " " > $1-abuseipdb.txt
+curl -s "https://www.abuseipdb.com/whois/$1" -H "user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36" -b "abuseipdb_session=YOUR-SESSION" | grep -E "<li>\\w.*</li>" | sed -E "s/<\\/?li>//g" | sed "s|$|.$1|" | tr -d " " > $1-abuseipdb.txt
 echo "abuseipdb Done, result & length ==> ` wc -l $1-abuseipdb.txt `"
 
 echo
